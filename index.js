@@ -92,9 +92,69 @@ async function startXeonBotInc() {
         reconnectAttempts = 0;
         isReconnecting = false;
         
-        let { version } = await fetchLatestBaileysVersion();
-        const { state, saveCreds } = await useMultiFileAuthState(`./session`);
-        const msgRetryCounterCache = new NodeCache();
+let { version } = await fetchLatestBaileysVersion();
+
+if (!fs.existsSync('./session/creds.json') && global.sessionid) {
+  try {
+
+    let sessionData;
+    let sessionString = global.sessionid.trim();
+
+    if (sessionString.startsWith('GAAJU-MD:')) {
+
+      const base64Part = sessionString
+        .substring(9)
+        .trim()
+        .replace(/^~+/, '');
+
+      const decoded = Buffer
+        .from(base64Part, 'base64')
+        .toString('utf-8');
+
+      sessionData = JSON.parse(decoded);
+
+    } else {
+
+      try {
+
+        sessionData = JSON.parse(sessionString);
+
+      } catch {
+
+        const decoded = Buffer
+          .from(sessionString, 'base64')
+          .toString('utf-8');
+
+        sessionData = JSON.parse(decoded);
+
+      }
+
+    }
+
+    fs.mkdirSync('./session', {
+      recursive: true
+    });
+
+    fs.writeFileSync(
+      './session/creds.json',
+      JSON.stringify(sessionData, null, 2)
+    );
+
+    console.log('✅ Session restored successfully');
+
+  } catch (err) {
+
+    console.error(
+      '❌ Failed to restore session:',
+      err.message
+    );
+
+  }
+}
+
+const { state, saveCreds } = await useMultiFileAuthState('./session');
+
+const msgRetryCounterCache = new NodeCache();
 
         const XeonBotInc = makeWASocket({
             version,
