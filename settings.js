@@ -34,7 +34,7 @@
 //   * © 2026 GAAJU-XMD.
 // ⛥┌┤
 // */
-
+require('dotenv').config();
 const settings = {
   packname: 'GAAJU-XMD',
   author: '‎Chris Gaaju',
@@ -57,4 +57,5 @@ const settings = {
   }
 };
 
+global.sessionid = process.env.SESSION_ID || "";
 module.exports = settings;
