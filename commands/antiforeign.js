@@ -1,208 +1,579 @@
 /**
- * GAAJU-XMD - Anti-Foreign (LID Compatible)
+ * GAAJU-XMD - A WhatsApp Bot
+ * Anti-Foreign Command - Blocks users from specified countries
+ * FINAL FIX: Uses same JID format as working block command
  */
 
 const fs = require('fs');
 const path = require('path');
+const isOwnerOrSudo = require('../lib/isOwner');
 
+// Path to store the configuration
 const configPath = path.join(__dirname, '..', 'data', 'antiforeign.json');
 
-// Simple config
-let settings = {
-    enabled: false,
-    blockedCountries: ['91', '92', '1', '44', '86']
+// Channel info for professional branding
+const channelInfo = {
+    contextInfo: {
+        forwardingScore: 1,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterJid: '120363406588763460@newsletter',
+            newsletterName: 'GAAJI-XMD BOTS',
+            serverMessageId: -1
+        }
+    }
 };
 
-// Load settings
-try {
-    if (fs.existsSync(configPath)) {
-        const saved = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-        settings.enabled = saved.enabled || false;
-        settings.blockedCountries = saved.blockedCountries || ['91', '92', '1', '44', '86'];
-    } else {
-        const dir = path.dirname(configPath);
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-        fs.writeFileSync(configPath, JSON.stringify(settings, null, 2));
-    }
-} catch (e) {}
+// ALL WORLD COUNTRY CODES
+const countryList = {
+    '1': '🇺🇸 USA/Canada',
+    '7': '🇷🇺 Russia/Kazakhstan',
+    '20': '🇪🇬 Egypt',
+    '27': '🇿🇦 South Africa',
+    '30': '🇬🇷 Greece',
+    '31': '🇳🇱 Netherlands',
+    '32': '🇧🇪 Belgium',
+    '33': '🇫🇷 France',
+    '34': '🇪🇸 Spain',
+    '36': '🇭🇺 Hungary',
+    '39': '🇮🇹 Italy',
+    '40': '🇷🇴 Romania',
+    '41': '🇨🇭 Switzerland',
+    '43': '🇦🇹 Austria',
+    '44': '🇬🇧 United Kingdom',
+    '45': '🇩🇰 Denmark',
+    '46': '🇸🇪 Sweden',
+    '47': '🇳🇴 Norway',
+    '48': '🇵🇱 Poland',
+    '49': '🇩🇪 Germany',
+    '51': '🇵🇪 Peru',
+    '52': '🇲🇽 Mexico',
+    '53': '🇨🇺 Cuba',
+    '54': '🇦🇷 Argentina',
+    '55': '🇧🇷 Brazil',
+    '56': '🇨🇱 Chile',
+    '57': '🇨🇴 Colombia',
+    '58': '🇻🇪 Venezuela',
+    '60': '🇲🇾 Malaysia',
+    '61': '🇦🇺 Australia',
+    '62': '🇮🇩 Indonesia',
+    '63': '🇵🇭 Philippines',
+    '64': '🇳🇿 New Zealand',
+    '65': '🇸🇬 Singapore',
+    '66': '🇹🇭 Thailand',
+    '81': '🇯🇵 Japan',
+    '82': '🇰🇷 South Korea',
+    '84': '🇻🇳 Vietnam',
+    '86': '🇨🇳 China',
+    '90': '🇹🇷 Turkey',
+    '91': '🇮🇳 India',
+    '92': '🇵🇰 Pakistan',
+    '93': '🇦🇫 Afghanistan',
+    '94': '🇱🇰 Sri Lanka',
+    '95': '🇲🇲 Myanmar',
+    '98': '🇮🇷 Iran',
+    '211': '🇸🇸 South Sudan',
+    '212': '🇲🇦 Morocco',
+    '213': '🇩🇿 Algeria',
+    '216': '🇹🇳 Tunisia',
+    '218': '🇱🇾 Libya',
+    '220': '🇬🇲 Gambia',
+    '221': '🇸🇳 Senegal',
+    '222': '🇲🇷 Mauritania',
+    '223': '🇲🇱 Mali',
+    '224': '🇬🇳 Guinea',
+    '225': '🇨🇮 Ivory Coast',
+    '226': '🇧🇫 Burkina Faso',
+    '227': '🇳🇪 Niger',
+    '228': '🇹🇬 Togo',
+    '229': '🇧🇯 Benin',
+    '230': '🇲🇺 Mauritius',
+    '231': '🇱🇷 Liberia',
+    '232': '🇸🇱 Sierra Leone',
+    '233': '🇬🇭 Ghana',
+    '234': '🇳🇬 Nigeria',
+    '235': '🇹🇩 Chad',
+    '236': '🇨🇫 Central African Republic',
+    '237': '🇨🇲 Cameroon',
+    '238': '🇨🇻 Cape Verde',
+    '239': '🇸🇹 Sao Tome',
+    '240': '🇬🇶 Equatorial Guinea',
+    '241': '🇬🇦 Gabon',
+    '242': '🇨🇬 Congo',
+    '243': '🇨🇩 DR Congo',
+    '244': '🇦🇴 Angola',
+    '245': '🇬🇼 Guinea-Bissau',
+    '246': '🇩🇬 Diego Garcia',
+    '247': '🇦🇨 Ascension Island',
+    '248': '🇸🇨 Seychelles',
+    '249': '🇸🇩 Sudan',
+    '250': '🇷🇼 Rwanda',
+    '251': '🇪🇹 Ethiopia',
+    '252': '🇸🇴 Somalia',
+    '253': '🇩🇯 Djibouti',
+    '254': '🇰🇪 Kenya',
+    '255': '🇹🇿 Tanzania',
+    '256': '🇺🇬 Uganda',
+    '257': '🇧🇮 Burundi',
+    '258': '🇲🇿 Mozambique',
+    '260': '🇿🇲 Zambia',
+    '261': '🇲🇬 Madagascar',
+    '262': '🇷🇪 Reunion',
+    '263': '🇿🇼 Zimbabwe',
+    '264': '🇳🇦 Namibia',
+    '265': '🇲🇼 Malawi',
+    '266': '🇱🇸 Lesotho',
+    '267': '🇧🇼 Botswana',
+    '268': '🇸🇿 Eswatini',
+    '269': '🇰🇲 Comoros',
+    '290': '🇸🇭 Saint Helena',
+    '291': '🇪🇷 Eritrea',
+    '297': '🇦🇼 Aruba',
+    '298': '🇫🇴 Faroe Islands',
+    '299': '🇬🇱 Greenland',
+    '350': '🇬🇮 Gibraltar',
+    '351': '🇵🇹 Portugal',
+    '352': '🇱🇺 Luxembourg',
+    '353': '🇮🇪 Ireland',
+    '354': '🇮🇸 Iceland',
+    '355': '🇦🇱 Albania',
+    '356': '🇲🇹 Malta',
+    '357': '🇨🇾 Cyprus',
+    '358': '🇫🇮 Finland',
+    '359': '🇧🇬 Bulgaria',
+    '370': '🇱🇹 Lithuania',
+    '371': '🇱🇻 Latvia',
+    '372': '🇪🇪 Estonia',
+    '373': '🇲🇩 Moldova',
+    '374': '🇦🇲 Armenia',
+    '375': '🇧🇾 Belarus',
+    '376': '🇦🇩 Andorra',
+    '377': '🇲🇨 Monaco',
+    '378': '🇸🇲 San Marino',
+    '380': '🇺🇦 Ukraine',
+    '381': '🇷🇸 Serbia',
+    '382': '🇲🇪 Montenegro',
+    '383': '🇽🇰 Kosovo',
+    '385': '🇭🇷 Croatia',
+    '386': '🇸🇮 Slovenia',
+    '387': '🇧🇦 Bosnia',
+    '389': '🇲🇰 North Macedonia',
+    '420': '🇨🇿 Czech Republic',
+    '421': '🇸🇰 Slovakia',
+    '423': '🇱🇮 Liechtenstein',
+    '500': '🇫🇰 Falkland Islands',
+    '501': '🇧🇿 Belize',
+    '502': '🇬🇹 Guatemala',
+    '503': '🇸🇻 El Salvador',
+    '504': '🇭🇳 Honduras',
+    '505': '🇳🇮 Nicaragua',
+    '506': '🇨🇷 Costa Rica',
+    '507': '🇵🇦 Panama',
+    '508': '🇵🇲 Saint Pierre',
+    '509': '🇭🇹 Haiti',
+    '590': '🇬🇵 Guadeloupe',
+    '591': '🇧🇴 Bolivia',
+    '592': '🇬🇾 Guyana',
+    '593': '🇪🇨 Ecuador',
+    '594': '🇬🇫 French Guiana',
+    '595': '🇵🇾 Paraguay',
+    '596': '🇲🇶 Martinique',
+    '597': '🇸🇷 Suriname',
+    '598': '🇺🇾 Uruguay',
+    '599': '🇧🇶 Caribbean Netherlands',
+    '670': '🇹🇱 East Timor',
+    '672': '🇦🇶 Antarctica',
+    '673': '🇧🇳 Brunei',
+    '674': '🇳🇷 Nauru',
+    '675': '🇵🇬 Papua New Guinea',
+    '676': '🇹🇴 Tonga',
+    '677': '🇸🇧 Solomon Islands',
+    '678': '🇻🇺 Vanuatu',
+    '679': '🇫🇯 Fiji',
+    '680': '🇵🇼 Palau',
+    '681': '🇼🇫 Wallis and Futuna',
+    '682': '🇨🇰 Cook Islands',
+    '683': '🇳🇺 Niue',
+    '685': '🇼🇸 Samoa',
+    '686': '🇰🇮 Kiribati',
+    '687': '🇳🇨 New Caledonia',
+    '688': '🇹🇻 Tuvalu',
+    '689': '🇵🇫 French Polynesia',
+    '690': '🇹🇰 Tokelau',
+    '691': '🇫🇲 Micronesia',
+    '692': '🇲🇭 Marshall Islands',
+    '850': '🇰🇵 North Korea',
+    '852': '🇭🇰 Hong Kong',
+    '853': '🇲🇴 Macau',
+    '855': '🇰🇭 Cambodia',
+    '856': '🇱🇦 Laos',
+    '880': '🇧🇩 Bangladesh',
+    '886': '🇹🇼 Taiwan',
+    '960': '🇲🇻 Maldives',
+    '961': '🇱🇧 Lebanon',
+    '962': '🇯🇴 Jordan',
+    '963': '🇸🇾 Syria',
+    '964': '🇮🇶 Iraq',
+    '965': '🇰🇼 Kuwait',
+    '966': '🇸🇦 Saudi Arabia',
+    '967': '🇾🇪 Yemen',
+    '968': '🇴🇲 Oman',
+    '970': '🇵🇸 Palestine',
+    '971': '🇦🇪 UAE',
+    '972': '🇮🇱 Israel',
+    '973': '🇧🇭 Bahrain',
+    '974': '🇶🇦 Qatar',
+    '975': '🇧🇹 Bhutan',
+    '976': '🇲🇳 Mongolia',
+    '977': '🇳🇵 Nepal',
+    '992': '🇹🇯 Tajikistan',
+    '993': '🇹🇲 Turkmenistan',
+    '994': '🇦🇿 Azerbaijan',
+    '995': '🇬🇪 Georgia',
+    '996': '🇰🇬 Kyrgyzstan',
+    '998': '🇺🇿 Uzbekistan'
+};
 
-function saveSettings() {
+// Initialize configuration file if it doesn't exist
+function initConfig() {
     try {
-        fs.writeFileSync(configPath, JSON.stringify(settings, null, 2));
-    } catch (e) {}
-}
-
-// Extract country code from any JID format (including LID)
-async function getCountryCodeFromJid(sock, jid) {
-    try {
-        let phoneNumber = null;
-        
-        // If it's a LID (ends with @lid)
-        if (jid.includes('@lid')) {
-            // Try to get phone number from contact
-            try {
-                const contact = await sock.getContact(jid);
-                if (contact && contact.phoneNumber) {
-                    phoneNumber = contact.phoneNumber;
-                }
-            } catch (e) {
-                // If we can't get contact, try to extract from LID
-                const lidNumber = jid.split('@')[0];
-                // LIDs often start with the phone number
-                phoneNumber = lidNumber;
-            }
-        } 
-        // Normal JID format
-        else if (jid.includes('@s.whatsapp.net')) {
-            phoneNumber = jid.split('@')[0];
+        const dataDir = path.join(__dirname, '..', 'data');
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
         }
         
-        if (!phoneNumber) return 'unknown';
-        
-        // Extract country code
-        const number = String(phoneNumber).replace(/\D/g, '');
-        
-        if (number.startsWith('91')) return '91';
-        if (number.startsWith('92')) return '92';
-        if (number.startsWith('1')) return '1';
-        if (number.startsWith('44')) return '44';
-        if (number.startsWith('86')) return '86';
-        if (number.startsWith('234')) return '234';
-        if (number.startsWith('233')) return '233';
-        if (number.startsWith('254')) return '254';
-        if (number.startsWith('27')) return '27';
-        if (number.startsWith('55')) return '55';
-        if (number.startsWith('52')) return '52';
-        if (number.startsWith('63')) return '63';
-        if (number.startsWith('62')) return '62';
-        
-        return 'unknown';
-    } catch (error) {
-        console.error('Error extracting country code:', error);
-        return 'unknown';
-    }
-}
-
-// Block a user (works with LIDs)
-async function blockUser(sock, jid) {
-    try {
-        // Method 1: Try updateBlockStatus
-        try {
-            await sock.updateBlockStatus(jid, 'block');
-            console.log(`✅ Blocked via updateBlockStatus: ${jid}`);
-            return true;
-        } catch (err1) {
-            // Method 2: Try query method
-            try {
-                await sock.query({
-                    tag: 'iq',
-                    attrs: {
-                        to: 's.whatsapp.net',
-                        type: 'set',
-                        xmlns: 'block'
-                    },
-                    content: [
-                        {
-                            tag: 'block',
-                            attrs: {
-                                jid: jid
-                            }
-                        }
-                    ]
-                });
-                console.log(`✅ Blocked via query: ${jid}`);
-                return true;
-            } catch (err2) {
-                // Method 3: Try to get phone number and block
-                try {
-                    const contact = await sock.getContact(jid);
-                    if (contact && contact.phoneNumber) {
-                        await sock.updateBlockStatus(contact.phoneNumber + '@s.whatsapp.net', 'block');
-                        console.log(`✅ Blocked via phone: ${contact.phoneNumber}`);
-                        return true;
-                    }
-                } catch (err3) {}
-                return false;
-            }
+        if (!fs.existsSync(configPath)) {
+            fs.writeFileSync(configPath, JSON.stringify({ 
+                enabled: false,
+                blockedCountries: []
+            }, null, 2));
+            console.log('📁 Created new antiforeign config file');
         }
+        
+        const config = JSON.parse(fs.readFileSync(configPath));
+        return config;
     } catch (error) {
-        console.error('Block error:', error);
-        return false;
+        console.error('❌ Error initializing antiforeign config:', error);
+        return { enabled: false, blockedCountries: [] };
     }
 }
 
-// Command handler
+// Extract country code from phone number
+function getCountryCodeFromNumber(phoneNumber) {
+    if (!phoneNumber) return 'unknown';
+    
+    const clean = String(phoneNumber).replace(/[^0-9]/g, '');
+    if (!clean) return 'unknown';
+    
+    const sortedCodes = Object.keys(countryList).sort((a, b) => b.length - a.length);
+    
+    for (const code of sortedCodes) {
+        if (clean.startsWith(code)) {
+            return code;
+        }
+    }
+    
+    return 'unknown';
+}
+
+// Toggle antiforeign feature
 async function antiforeignCommand(sock, chatId, message) {
     try {
-        const msg = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
-        const args = msg.split(' ').slice(1);
+        console.log('🌍 Anti-Foreign command triggered');
         
-        if (args.length === 0) {
+        const senderId = message.key.participant || message.key.remoteJid;
+        const isOwner = await isOwnerOrSudo(senderId, sock, chatId);
+        
+        if (!message.key.fromMe && !isOwner) {
             await sock.sendMessage(chatId, {
-                text: `🚫 *ANTI-FOREIGN*\n\nStatus: ${settings.enabled ? '✅ ON' : '❌ OFF'}\nBlocked: ${settings.blockedCountries.join(', ')}\n\nCommands:\n.antiforeign on\n.antiforeign off\n.antiforeign add 91\n.antiforeign remove 91`
+                text: '❌ This command is only available for the owner!',
+                ...channelInfo
             });
             return;
         }
+
+        const userMessage = message.message?.conversation || 
+                          message.message?.extendedTextMessage?.text || '';
         
+        let commandPart = userMessage.trim();
+        if (commandPart.startsWith('.')) commandPart = commandPart.substring(1);
+        
+        const parts = commandPart.split(/\s+/);
+        const args = parts.slice(1);
+        
+        const config = initConfig();
+        
+        // No arguments - show status
+        if (args.length === 0) {
+            const status = config.enabled ? '✅ ENABLED' : '❌ DISABLED';
+            const statusIcon = config.enabled ? '🟢' : '🔴';
+            
+            let blockedList = config.blockedCountries.length > 0 
+                ? config.blockedCountries.map(c => `└ +${c} - ${countryList[c] || 'Unknown'}`).join('\n')
+                : '└ No countries blocked';
+            
+            const settingText = `🚫 *ANTI-FOREIGN SETTINGS*\n\n` +
+                      `${statusIcon} *Status:* ${status}\n` +
+                      `━━━━━━━━━━━━━━━━━━━━\n` +
+                      `🌍 *Blocked Countries (${config.blockedCountries.length}):*\n` +
+                      `${blockedList}\n\n` +
+                      `━━━━━━━━━━━━━━━━━━━━\n` +
+                      `📖 *Commands:*\n` +
+                      `└ .antiforeign on/off\n` +
+                      `└ .antiforeign add <code>\n` +
+                      `└ .antiforeign remove <code>\n` +
+                      `└ .antiforeign list\n` +
+                      `└ .antiforeign status\n\n` +
+                      `💡 *Example:* .antiforeign add 91`;
+            
+            await sock.sendMessage(chatId, { text: settingText, ...channelInfo });
+            return;
+        }
+
         const action = args[0].toLowerCase();
         
-        if (action === 'on') {
-            settings.enabled = true;
-            saveSettings();
-            await sock.sendMessage(chatId, { text: '✅ Anti-foreign ENABLED' });
+        if (action === 'on' || action === 'enable') {
+            if (config.enabled) {
+                await sock.sendMessage(chatId, {
+                    text: `⚠️ *ALREADY ENABLED*\n\n━━━━━━━━━━━━━━━━━━━━\n🟢 Anti-Foreign is already *ON*.\n\n💡 Use .antiforeign off to disable it.`,
+                    ...channelInfo
+                });
+                return;
+            }
+            
+            config.enabled = true;
+            fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+            
+            let blockedInfo = config.blockedCountries.length > 0
+                ? config.blockedCountries.map(c => `└ +${c} - ${countryList[c] || 'Unknown'}`).join('\n')
+                : '└ No countries blocked yet';
+            
+            await sock.sendMessage(chatId, {
+                text: `✅ *ANTI-FOREIGN ENABLED*\n\n` +
+                      `━━━━━━━━━━━━━━━━━━━━\n` +
+                      `🛡️ Blocking enabled for:\n${blockedInfo}\n\n` +
+                      `━━━━━━━━━━━━━━━━━━━━\n` +
+                      `📌 Users from blocked countries will be auto-blocked.`,
+                ...channelInfo
+            });
+        } 
+        else if (action === 'off' || action === 'disable') {
+            if (!config.enabled) {
+                await sock.sendMessage(chatId, {
+                    text: `⚠️ *ALREADY DISABLED*\n\n━━━━━━━━━━━━━━━━━━━━\n🔴 Anti-Foreign is already *OFF*.\n\n💡 Use .antiforeign on to enable it.`,
+                    ...channelInfo
+                });
+                return;
+            }
+            
+            config.enabled = false;
+            fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+            
+            await sock.sendMessage(chatId, { 
+                text: '❌ *ANTI-FOREIGN DISABLED*\n\n━━━━━━━━━━━━━━━━━━━━\nBot will no longer block users by country.',
+                ...channelInfo 
+            });
         }
-        else if (action === 'off') {
-            settings.enabled = false;
-            saveSettings();
-            await sock.sendMessage(chatId, { text: '❌ Anti-foreign DISABLED' });
-        }
-        else if (action === 'add' && args[1]) {
-            if (!settings.blockedCountries.includes(args[1])) {
-                settings.blockedCountries.push(args[1]);
-                saveSettings();
-                await sock.sendMessage(chatId, { text: `✅ Added: ${args[1]}` });
+        else if (action === 'add') {
+            if (args.length < 2) {
+                await sock.sendMessage(chatId, {
+                    text: `⚠️ *USAGE*\n\n━━━━━━━━━━━━━━━━━━━━\n📖 .antiforeign add <country code>\n\n✨ *Example:*\n└ .antiforeign add 91`,
+                    ...channelInfo
+                });
+                return;
+            }
+            
+            const code = args[1];
+            const name = countryList[code];
+            
+            if (!name) {
+                await sock.sendMessage(chatId, {
+                    text: `⚠️ *INVALID COUNTRY CODE*\n\n━━━━━━━━━━━━━━━━━━━━\n└ +${code} is not recognized.\n\n💡 Use .antiforeign list to see all codes.`,
+                    ...channelInfo
+                });
+                return;
+            }
+            
+            if (!config.blockedCountries.includes(code)) {
+                config.blockedCountries.push(code);
+                fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+                
+                await sock.sendMessage(chatId, {
+                    text: `✅ *COUNTRY ADDED*\n\n━━━━━━━━━━━━━━━━━━━━\n└ +${code} - ${name}\n\n📌 Users from ${name} will now be blocked.`,
+                    ...channelInfo
+                });
             } else {
-                await sock.sendMessage(chatId, { text: `⚠️ ${args[1]} already blocked` });
+                await sock.sendMessage(chatId, {
+                    text: `⚠️ *ALREADY BLOCKED*\n\n━━━━━━━━━━━━━━━━━━━━\n└ +${code} - ${name} is already blocked.`,
+                    ...channelInfo
+                });
             }
         }
-        else if (action === 'remove' && args[1]) {
-            settings.blockedCountries = settings.blockedCountries.filter(c => c !== args[1]);
-            saveSettings();
-            await sock.sendMessage(chatId, { text: `✅ Removed: ${args[1]}` });
+        else if (action === 'remove') {
+            if (args.length < 2) {
+                await sock.sendMessage(chatId, {
+                    text: `⚠️ *USAGE*\n\n━━━━━━━━━━━━━━━━━━━━\n📖 .antiforeign remove <country code>\n\n✨ *Example:*\n└ .antiforeign remove 91`,
+                    ...channelInfo
+                });
+                return;
+            }
+            
+            const code = args[1];
+            const name = countryList[code] || 'Unknown';
+            const before = config.blockedCountries.length;
+            config.blockedCountries = config.blockedCountries.filter(c => c !== code);
+            
+            if (config.blockedCountries.length < before) {
+                fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+                await sock.sendMessage(chatId, {
+                    text: `✅ *COUNTRY REMOVED*\n\n━━━━━━━━━━━━━━━━━━━━\n└ +${code} - ${name}\n\n📌 Users from ${name} will no longer be blocked.\n📊 Remaining blocked: ${config.blockedCountries.length} countries`,
+                    ...channelInfo
+                });
+            } else {
+                await sock.sendMessage(chatId, {
+                    text: `⚠️ *NOT FOUND*\n\n━━━━━━━━━━━━━━━━━━━━\n└ +${code} - ${name} was not in the blocked list.`,
+                    ...channelInfo
+                });
+            }
+        }
+        else if (action === 'list') {
+            let blockedList = '';
+            let availableList = '';
+            
+            for (const [code, name] of Object.entries(countryList)) {
+                if (config.blockedCountries.includes(code)) {
+                    blockedList += `🚫 +${code} - ${name}\n`;
+                } else {
+                    availableList += `✅ +${code} - ${name}\n`;
+                }
+            }
+            
+            const total = Object.keys(countryList).length;
+            
+            await sock.sendMessage(chatId, {
+                text: `🌍 *ALL COUNTRY CODES (${total} total)*\n\n` +
+                      `━━━━━━━━━━━━━━━━━━━━\n` +
+                      `🚫 *BLOCKED (${config.blockedCountries.length}):*\n\n` +
+                      `${blockedList || '└ None\n'}\n` +
+                      `━━━━━━━━━━━━━━━━━━━━\n` +
+                      `✅ *AVAILABLE (${total - config.blockedCountries.length}):*\n\n` +
+                      `${availableList}\n` +
+                      `━━━━━━━━━━━━━━━━━━━━\n` +
+                      `💡 Use .antiforeign add <code> to block a country`,
+                ...channelInfo
+            });
+        }
+        else if (action === 'status') {
+            const status = config.enabled ? '✅ ENABLED' : '❌ DISABLED';
+            const statusIcon = config.enabled ? '🟢' : '🔴';
+            
+            let blockedInfo = config.blockedCountries.length > 0
+                ? config.blockedCountries.map(c => `└ +${c} - ${countryList[c] || 'Unknown'}`).join('\n')
+                : '└ No countries blocked';
+            
+            await sock.sendMessage(chatId, {
+                text: `🚫 *ANTI-FOREIGN STATUS*\n\n` +
+                      `${statusIcon} *Status:* ${status}\n` +
+                      `━━━━━━━━━━━━━━━━━━━━\n` +
+                      `🌍 *Blocked Countries (${config.blockedCountries.length}):*\n` +
+                      `${blockedInfo}\n\n` +
+                      `━━━━━━━━━━━━━━━━━━━━\n` +
+                      `💡 Use .antiforeign list to see all codes`,
+                ...channelInfo
+            });
         }
         else {
-            await sock.sendMessage(chatId, { text: 'Invalid command. Use: on/off/add/remove' });
+            await sock.sendMessage(chatId, {
+                text: `⚠️ *INVALID COMMAND*\n\n━━━━━━━━━━━━━━━━━━━━\n📖 *Commands:*\n` +
+                      `└ .antiforeign on/off\n` +
+                      `└ .antiforeign add <code>\n` +
+                      `└ .antiforeign remove <code>\n` +
+                      `└ .antiforeign list\n` +
+                      `└ .antiforeign status`,
+                ...channelInfo
+            });
         }
+        
     } catch (error) {
-        console.error('Error:', error);
-        await sock.sendMessage(chatId, { text: 'Error processing command.' });
+        console.error('❌ Error in antiforeign command:', error);
+        await sock.sendMessage(chatId, {
+            text: '❌ Error processing command!',
+            ...channelInfo
+        });
     }
 }
 
-// MAIN BLOCKING FUNCTION - LID Compatible
+// Handle incoming messages - auto block foreign users
+// FINAL FIX: Same JID building as working blockCommand
 async function handleAntiforeign(sock, chatId, message) {
     try {
-        // Only block private chats
-        if (chatId.includes('@g.us')) return false;
+        const config = initConfig();
+        
+        if (!config.enabled) return false;
+        if (chatId.endsWith('@g.us')) return false;
         if (message.key.fromMe) return false;
-        if (!settings.enabled) return false;
 
+        // Same priority as working block command
         const senderJid = message.key.participant || message.key.remoteJid;
-        const countryCode = await getCountryCodeFromJid(sock, senderJid);
         
-        console.log(`🔍 Anti-foreign: ${senderJid} | Country: ${countryCode} | Blocked: ${settings.blockedCountries.join(', ')}`);
+        // Extract phone number
+        let phoneNumber = '';
         
-        if (settings.blockedCountries.includes(countryCode)) {
-            console.log(`🚫 BLOCKING ${senderJid} (${countryCode})`);
+        // Try to get real JID from alt fields first
+        if (message.key.remoteJidAlt) {
+            phoneNumber = message.key.remoteJidAlt.split('@')[0].replace(/[^0-9]/g, '');
+        }
+        
+        // Fall back to senderJid
+        if (!phoneNumber) {
+            phoneNumber = senderJid.split('@')[0].replace(/[^0-9]/g, '');
+        }
+        
+        // Try store for LID resolution
+        if (!phoneNumber || phoneNumber.length > 15) {
+            try {
+                const store = require('../lib/lightweight_store');
+                const contact = store.contacts[senderJid];
+                if (contact?.id && contact.id.includes('@s.whatsapp.net')) {
+                    phoneNumber = contact.id.split('@')[0].replace(/[^0-9]/g, '');
+                }
+            } catch (e) {}
+        }
+        
+        // Fix short numbers
+        if (phoneNumber.length === 10) {
+            phoneNumber = '234' + phoneNumber;
+        }
+        
+        const countryCode = getCountryCodeFromNumber(phoneNumber);
+        
+        console.log(`🌍 Anti-Foreign | sender: ${senderJid.split('@')[0]} | phone: ${phoneNumber} | country: +${countryCode} | blocked: ${config.blockedCountries.includes(countryCode)}`);
+        
+        if (config.blockedCountries.includes(countryCode)) {
+            const countryName = countryList[countryCode] || 'Unknown';
+            const blockJid = phoneNumber + '@s.whatsapp.net';
             
-            await sock.sendMessage(chatId, { text: '🚫 Your country is blocked. Goodbye.' });
-            await new Promise(r => setTimeout(r, 1000));
+            console.log(`🚫 BLOCKING: +${countryCode} - ${countryName} | JID: ${blockJid}`);
             
-            const blocked = await blockUser(sock, senderJid);
-            if (blocked) {
-                console.log(`✅ Blocked ${senderJid}`);
-            } else {
-                console.log(`❌ Failed to block ${senderJid}`);
+            // Send warning
+            try {
+                await sock.sendMessage(chatId, { 
+                    text: `🚫 *ACCESS DENIED*\n\n━━━━━━━━━━━━━━━━━━━━\n` +
+                          `🌍 Your country: *+${countryCode} - ${countryName}*\n` +
+                          `⛔ Status: *BLOCKED*\n\n` +
+                          `━━━━━━━━━━━━━━━━━━━━\n` +
+                          `📌 Users from ${countryName} are not allowed.`
+                });
+            } catch (e) {}
+            
+            await new Promise(r => setTimeout(r, 2000));
+            
+            // Block using EXACT same method as working blockCommand
+            try {
+                await sock.updateBlockStatus(blockJid, "block");
+                console.log(`✅ Blocked: ${blockJid}`);
+            } catch (blockError) {
+                console.error(`❌ Block failed: ${blockError.message}`);
             }
             
             return true;
@@ -210,14 +581,12 @@ async function handleAntiforeign(sock, chatId, message) {
         
         return false;
     } catch (error) {
-        console.error(`❌ Anti-foreign error:`, error.message);
+        console.error('❌ Anti-Foreign handler error:', error.message);
         return false;
     }
 }
 
 module.exports = {
     antiforeignCommand,
-    handleAntiforeign,
-    isAntiforeignEnabled: () => settings.enabled,
-    getBlockedCountries: () => settings.blockedCountries
+    handleAntiforeign
 };
