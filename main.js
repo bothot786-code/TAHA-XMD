@@ -1,4 +1,4 @@
- // 🧹 Fix for ENOSPC / temp overflow in hosted panels
+// 🧹 Fix for ENOSPC / temp overflow in hosted panels
 const fs = require('fs');
 const path = require('path');
 
@@ -76,16 +76,18 @@ const {
     isAutorecordEnabled, 
     handleAutorecordForMessage, 
     handleAutorecordForCommand, 
-    showRecordingAfterCommand 
+    showRecordingAfterCommand,
+    stopAllInfiniteRecordings 
 } = require('./commands/autorecord');
 const { 
     autotypingCommand, 
     isAutotypingEnabled, 
     handleAutotypingForMessage, 
     handleAutotypingForCommand, 
-    showTypingAfterCommand 
+    showTypingAfterCommand,
+    stopAllInfiniteTyping 
 } = require('./commands/autotyping');
-const { autoStatusCommand } = require('./commands/autostatus');
+const { autoStatusCommand, handleStatusUpdate, handleBulkStatusUpdate } = require('./commands/autostatus');
 const { execute: antibotCommand, handleMessage: handleAntibotDetection } = require('./commands/antibot');
 const tagAllCommand = require('./commands/tagall');
 const helpCommand = require('./commands/help');
@@ -191,7 +193,7 @@ const { anticallCommand, readState: readAnticallState } = require('./commands/an
 const { pmblockerCommand, readState: readPmBlockerState } = require('./commands/pmblocker');
 const settingsCommand = require('./commands/settings');
 const soraCommand = require('./commands/sora');
-
+const { menuFontCommand } = require('./commands/menufont');
 
 
 // Global settings
@@ -242,7 +244,6 @@ const channelInfo = {
 };
 
 async function handleMessages(sock, messageUpdate, printLog) {
-  let chatId = null;
     try {
         const { messages, type } = messageUpdate;
         if (type !== 'notify') return;
@@ -250,10 +251,8 @@ async function handleMessages(sock, messageUpdate, printLog) {
         const message = messages[0];
         if (!message?.message) return;
         
-
-        
-     const isGroup = chatId ? chatId.endsWith('@g.us') : false;
-
+        const chatId = message.key.remoteJid;
+        const isGroup = chatId ? chatId.endsWith('@g.us') : false;
         // Handle autoread functionality
         await handleAutoread(sock, message);
 
@@ -276,7 +275,7 @@ await handleAutoreact(sock, message);
             return;
         }
 
-        chatId = message.key.remoteJid;
+ 
         const senderId = message.key.participant || message.key.remoteJid;
        
         const senderIsSudo = await isSudo(senderId);
@@ -297,7 +296,7 @@ await handleAutoreact(sock, message);
                 return;
             } else if (buttonId === 'support') {
                 await sock.sendMessage(chatId, { 
-                    text: `🔗 *Support*\n\nhttps://chat.whatsapp.com/K1CZsGzSk6t8Rw4t81fHEI?mode=wwt` 
+                    text: `🔗 *Support*\n\nhttps://chat.whatsapp.com/HgGLuDF6ZNABneNTbdrtUQ?mode=wwt` 
                 }, { quoted: message });
                 return;
             }
@@ -341,6 +340,9 @@ else if (rawMessageText.startsWith('.')) {
 if (!isCommand) {
     // Handle non-command messages - SHOW BOTH TYPING AND RECORDING INDICATORS
     if (rawMessageText.trim()) {
+        // Check for links BEFORE anything else
+        if (isGroup) await Antilink(message, sock);
+        
         // Show typing indicator for non-command messages
         await handleAutotypingForMessage(sock, chatId, rawMessageText);
         
@@ -604,8 +606,7 @@ if (!isPublic && !isOwnerOrSudoCheck) {
     }
 
     const action = userMessage.split(' ')[1]?.toLowerCase();
-    
-    // If no argument provided, show current status
+
     if (!action) {
         const currentMode = data.isPublic ? 'public' : 'private';
         const modeEmoji = data.isPublic ? '🌐' : '🔒';
@@ -635,7 +636,7 @@ if (!isPublic && !isOwnerOrSudoCheck) {
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363406588763460@newsletter',
-                    newsletterName: 'Xᴄʜʀɪs ᴛᴇᴄʜ2',
+                    newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
                     serverMessageId: -1
                 }
             }
@@ -657,7 +658,25 @@ if (!isPublic && !isOwnerOrSudoCheck) {
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363406588763460@newsletter',
-                    newsletterName: 'Xᴄʜʀɪs ᴛᴇᴄʜ2',
+                    newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                    serverMessageId: -1
+                }
+            }
+        }, { quoted: message });
+        return;
+    }
+
+    if ((action === 'public' && data.isPublic) || (action === 'private' && !data.isPublic)) {
+        const currentMode = data.isPublic ? 'PUBLIC' : 'PRIVATE';
+        const emoji = data.isPublic ? '🌐' : '🔒';
+        await sock.sendMessage(chatId, {
+            text: `⚠️ *ALREADY ${currentMode}*\n\n━━━━━━━━━━━━━━━━━━━━\n${emoji} Bot is already in *${currentMode} MODE*.\n\n💡 No changes needed.`,
+            contextInfo: {
+                forwardingScore: 1,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363406588763460@newsletter',
+                    newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
                     serverMessageId: -1
                 }
             }
@@ -666,7 +685,6 @@ if (!isPublic && !isOwnerOrSudoCheck) {
     }
 
     try {
-        // Update access mode
         data.isPublic = action === 'public';
         fs.writeFileSync('./data/messageCount.json', JSON.stringify(data, null, 2));
 
@@ -690,7 +708,7 @@ if (!isPublic && !isOwnerOrSudoCheck) {
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363406588763460@newsletter',
-                    newsletterName: 'Xᴄʜʀɪs ᴛᴇᴄʜ2',
+                    newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
                     serverMessageId: -1
                 }
             }
@@ -704,7 +722,7 @@ if (!isPublic && !isOwnerOrSudoCheck) {
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363406588763460@newsletter',
-                    newsletterName: 'Xᴄʜʀɪs ᴛᴇᴄʜ2',
+                    newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
                     serverMessageId: -1
                 }
             }
@@ -820,7 +838,7 @@ case userMessage.startsWith('.getjid @'):
                 if (city) {
                     await weatherCommand(sock, chatId, message, city);
                 } else {
-                    await sock.sendMessage(chatId, { text: '*⛈️Please specify a city, e.g., .weather Akungba⛈️*', ...channelInfo }, { quoted: message });
+                    await sock.sendMessage(chatId, { text: '*🌧️Please specify a city, e.g., .weather Akungba🌧️*', ...channelInfo }, { quoted: message });
                 }
                 break;
             case userMessage === '.news':
@@ -1157,7 +1175,7 @@ case userMessage === '.confighelp':
                     
                     // Build botinfo message
                     let botInfoText = `🤖 *BOT INFORMATION*\n\n` +
-                                    `*Name:* ${settings.botName || 'GAAJU-XMD'}\n` +
+                                    `*Name:* ${settings.botName || 'WALLYJAYTECH-MD'}\n` +
                                     `*Version:* v${settings.version}\n` +
                                     `*Platform:* ${global.deploymentPlatform}\n` +
                                     `*Node.js:* ${process.version}\n` +
@@ -1179,8 +1197,8 @@ case userMessage === '.confighelp':
                                  `• Last Update Check: ${lastCheckTime}\n` +
                                  `• Update Available: ${updateStatus.updateAvailable ? 'Yes 🟢' : 'No ✅'}\n\n` +
                                  `🔗 *Links:*\n` +
-                                 `• GitHub: https://github.com/Xchristech2/GAAJU-XMD\n` +
-                                 `• YouTube: https://youtube.com/@Xchristech\n` +
+                                 `• GitHub: https://github.com/wallyjaytechh/WALLYJAYTECH-MD\n` +
+                                 `• YouTube: https://youtube.com/@wallyjaytechy\n` +
                                  `• Channel: ${global.channelLink}\n\n` +
                                  `📌 *Update Commands:*\n` +
                                  `• .checkupdate - Check for updates\n` +
@@ -1239,7 +1257,12 @@ case userMessage.startsWith('.join'):
     break;
 case userMessage.startsWith('.autorecord'):
     await autorecordCommand(sock, chatId, message);
-    break;         
+    break;     
+            case userMessage.startsWith('.menufont'):
+    const menuFontArgs = userMessage.split(' ').slice(1);
+    await menuFontCommand(sock, chatId, message, menuFontArgs);
+    commandExecuted = true;
+    break;
             case userMessage.startsWith('.antibadword'):
                 if (!isGroup) {
                     await sock.sendMessage(chatId, { text: '*This command can only be used in groups.*', ...channelInfo }, { quoted: message });
@@ -1770,6 +1793,21 @@ async function handleGroupParticipantUpdate(sock, update) {
         console.error('Error in handleGroupParticipantUpdate:', error);
     }
 }
+
+// Graceful shutdown - clean up infinite recording/typing sessions
+process.on('SIGINT', async () => {
+    console.log('🛑 Shutting down...');
+    try {
+        const autorecord = require('./commands/autorecord');
+        autorecord.stopAllInfiniteRecordings();
+    } catch (e) {}
+    try {
+        const autotyping = require('./commands/autotyping');
+        autotyping.stopAllInfiniteTyping();
+    } catch (e) {}
+    console.log('✅ Cleanup complete');
+    process.exit(0);
+});
 
 // Instead, export the handlers along with handleMessages
 module.exports = {
