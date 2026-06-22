@@ -509,69 +509,92 @@ Powered by Chris Gaaju
 
 ╰━━━━━━━━━━━━━━━━━━━━━━╯
 
-*📊 Cmds: ${totalCommands}*
+*📊 Total Commands: ${totalCommands}*
 
-*👥 Online: ${stats.activeUsers} | Users: ${stats.totalUsers}*
+*📊 Local Stats: ${stats.activeUsers} active now, ${stats.totalUsers} total users*
 
-*${greeting.emoji} ${greeting.greeting}, @${userName}!*
+*${greeting.emoji} ${greeting.greeting}, @${userName}! ${greeting.message}*
 
-*⬇️ Updates below ⬇️*
-`;
+*⬇️Join our channel below for updates⬇️*`;
 
-const styledMessage = applyFont(helpMessage, fontId);
-
-try {
-    const options = {
-        caption: styledMessage,
-        mentions: [senderId],
-        contextInfo: {
-            forwardingScore: 1,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363406588763460@newsletter',
-                newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
-                serverMessageId: -1
-            }
+    try {
+        // Send the appropriate media based on menuType
+        if (menuType === 'IMAGE') {
+            const imageBuffer = fs.readFileSync(imagePath);
+            await sock.sendMessage(chatId, {
+                image: imageBuffer,
+                caption: helpMessage,
+                mentions: [senderId],
+                contextInfo: {
+                    forwardingScore: 1,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '120363406588763460@newsletter',
+                        newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                        serverMessageId: -1
+                    }
+                }
+            }, { quoted: message });
+            console.log(`✅ Menu sent as IMAGE to @${senderId.split('@')[0]}`);
         }
-    };
+        else if (menuType === 'VIDEO') {
+            const videoBuffer = fs.readFileSync(videoPath);
+            await sock.sendMessage(chatId, {
+                video: videoBuffer,
+                caption: helpMessage,
+                mentions: [senderId],
+                contextInfo: {
+                    forwardingScore: 1,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '120363406588763460@newsletter',
+                        newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                        serverMessageId: -1
+                    }
+                }
+            }, { quoted: message });
+            console.log(`✅ Menu sent as VIDEO to @${senderId.split('@')[0]}`);
+        }
+        else {
+            // TEXT fallback
+            await sock.sendMessage(chatId, { 
+                text: helpMessage,
+                mentions: [senderId],
+                contextInfo: {
+                    forwardingScore: 1,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '120363406588763460@newsletter',
+                        newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                        serverMessageId: -1
+                    }
+                }
+            });
+        }
+        
+        // Wait a bit then send audio if available
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await sendMenuAudio(sock, chatId, message);
 
-    if (menuType === 'IMAGE') {
-        await sock.sendMessage(chatId, {
-            image: fs.readFileSync(imagePath),
-            ...options
-        }, { quoted: message });
+        console.log(`📊 Local Stats: ${stats.activeUsers} active, ${stats.totalUsers} total users (Platform: ${userPlatform})`);
+        console.log(`🎬 Menu Type shown: ${menuType}`);
 
-    } else if (menuType === 'VIDEO') {
-        await sock.sendMessage(chatId, {
-            video: fs.readFileSync(videoPath),
-            ...options
-        }, { quoted: message });
-
-    } else {
-        await sock.sendMessage(chatId, {
-            text: styledMessage,
-            ...options
+    } catch (error) {
+        console.error('Error in help command:', error);
+        await sock.sendMessage(chatId, { 
+            text: helpMessage,
+            mentions: [senderId],
+            contextInfo: {
+                forwardingScore: 1,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363406588763460@newsletter',
+                    newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                    serverMessageId: -1
+                }
+            }
         });
     }
-
-    await new Promise(r => setTimeout(r, 1000));
-    await sendMenuAudio(sock, chatId, message);
-
-} catch (error) {
-    console.error('Error in help command:', error);
-    await sock.sendMessage(chatId, {
-        text: styledMessage,
-        mentions: [senderId],
-        contextInfo: {
-            forwardingScore: 1,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363406588763460@newsletter',
-                newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
-                serverMessageId: -1
-            }
-        }
-    });
 }
 
 module.exports = helpCommand;
