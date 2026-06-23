@@ -1,5 +1,5 @@
 /**
- * WALLYJAYTECH-MD - A WhatsApp Bot
+ * GAAJU-XMD - A WhatsApp Bot
  * Anti-Delete Command - Recovers deleted messages instantly
  * Professional Version - All fixes applied
  */
