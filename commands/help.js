@@ -216,33 +216,30 @@ async function helpCommand(sock, chatId, message) {
 
 ${greeting.greeting}! Here's your menu:
 
-╔❖🔹 GAAJU-XMD MENU 🔹❖
-║
-║   👤 User: [ @${userName} ]
-║   🤖 BotName: [ ${settings.botName || 'GAAJU-XMD'} ]
-║   🧠 Version: [ ${stats.version || settings.version || '1.0.0'} ]
-║   👑 BotOwner: [ ${settings.botOwner || 'Xchristech'} ]
-║   📺 YT Channel: [ ${global.ytch} ]
-║   📞 OwnerNumber: [ ${settings.ownerNumber} ]
-║   📥 Prefix: [ ${prefix} ]
-║   🎨 Menu Style: [ ${styleId} ]
-║   🎬 Menu Media: [ ${menuType} & AUDIO ]
-║   🌍 TimeZone: [ ${settings.timezone} ]
-║   ⏰ Current Time: [ ${greeting.time} ]
-║   ${dayInfo.emoji} Day: [ ${dayInfo.day} ]
-║   💻 Bot Mode: [ ${currentBotMode} ]
-║   📊 Total Commands: [ ${totalCommands} ]
-║   📅 Date: [ ${getLocalizedTime()} ]
-║   📡 Your Platform: [ ${userPlatform} ]
-║   👥 Active Users Now: [ ${stats.activeUsers} ]
-║   📊 Total Users All Time: [ ${stats.totalUsers} ]
+╭──⟢ GAAJU-XMD ⟣──╮
+│ 👤 User: @${userName}
+│ 🤖 Bot: ${settings.botName || 'GAAJU-XMD'}
+│ 🧠 Version: ${stats.version || settings.version || '1.0.0'}
+│ 👑 Owner: ${settings.botOwner || 'Xchristech'}
+│ 📺 Channel: ${global.ytch}
+│ 📞 Number: ${settings.ownerNumber}
+│ 📥 Prefix: ${prefix}
+│ 🎨 Style: ${styleId}
+│ 🎬 Menu: ${menuType} & AUDIO
+│ 🌍 TimeZone: ${settings.timezone}
+│ ⏰ Time: ${greeting.time}
+│ ${dayInfo.emoji} Day: ${dayInfo.day}
+│ 💻 Mode: ${currentBotMode}
+│ 📊 Commands: ${totalCommands}
+│ 📅 Date: ${getLocalizedTime()}
+│ 📡 Platform: ${userPlatform}
+│ 👥 Active Users: ${stats.activeUsers}
+│ 📈 Total Users: ${stats.totalUsers}
 ${userUsageInfo}
-║   🌐 Users by Platform:
+│ 🌐 Users by Platform:
 ${platformStatsText}
-║   📡 Tracking: Local Storage ✅
-║
-╚═══════════════════╝
-
+│ 📡 Tracking: Local Storage ✅
+╰────────────────────────╯
    ⬇️ ALL COMMANDS ⬇️
 
 ╭────────────────────────╮
