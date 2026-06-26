@@ -1,6 +1,6 @@
 //════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════//
 //                                                                                                                                                                                        //
-//                                                             GAAJU-X𝐌𝐃 𝐁𝐎𝐓                                                                                                     //
+//                                                             GAAJU-XMD 𝐁𝐎𝐓                                                                                                     //
 //                                                                                                                                                                                        //
 //                                                                  𝐕 : 1.0.0                                                                                                             //
 //                                                                                                                                                                                        //
@@ -17,19 +17,19 @@
 //                                                                                                                                                                                        //
 //════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════//
 //* 
-//  * project_name : GAAJU-XMD
+//  * project_name : GAAJU-MXD
 //  * author : gaajutech
-//  * youtube : https://www.youtube.com/Xchristech 
+//  * youtube : https://www.youtube.com/Xchristech
 //  * description : GAAJU-XMD ,A Multi-Device whatsapp user bot.
 //*
 //*
-//re-upload? recode? copy code? give credit to Chris Gaaju 2026:)
+//re-upload? recode? copy code? give credit to gaajutech 2026:)
 //Instagram: gaajutech
 //Telegram: t.me/Official_ChrisGaaju
-//GitHub: Xchristech2
+//GitHub: Xchristech2 
 //WhatsApp: +2348069675806
 //want more free bot scripts? subscribe to my youtube channel: https://youtube.com/@Xchristech
-//   * Created By Github: gaajutech.
+//   * Created By Github: Xchristech2.
 //   * Credit To Chris Gaaju 
 //   * © 2026 GAAJU-XMD.
 // ⛥┌┤
@@ -363,7 +363,7 @@ if (!isGroup && !message.key.fromMe) {
   
             if (buttonId === 'channel') {
                 await sock.sendMessage(chatId, { 
-                    text: '📢 *Join our Channel:*\nhttps://whatsapp.com/channel/0029VbBvGgyFsn0alyIDjw0z' 
+                    text: '📢 *Join our Channel:*\nhttps://whatsapp.com/channel/0029Vb64CFeHFxP6SQN1VY0I' 
                 }, { quoted: message });
                 return;
             } else if (buttonId === 'owner') {
@@ -372,7 +372,7 @@ if (!isGroup && !message.key.fromMe) {
                 return;
             } else if (buttonId === 'support') {
                 await sock.sendMessage(chatId, { 
-                    text: `🔗 *Support*\n\nhttps://chat.whatsapp.com/HgGLuDF6ZNABneNTbdrtUQ?mode=wwt` 
+                    text: `🔗 *Support*\n\nhttps://chat.whatsapp.com/KWr561NJbHGGrT8YCSRibi?mode=wwt` 
                 }, { quoted: message });
                 return;
             }
@@ -386,35 +386,6 @@ if (!isGroup && !message.key.fromMe) {
     message.message?.buttonsResponseMessage?.selectedButtonId?.trim() ||
     ''
 );
-// ✅ Even smarter: Check if the command file exists and handle quoted messages
-if (isCommand && message.message?.extendedTextMessage?.contextInfo?.quotedMessage) {
-    const cmdName = userMessage.split(' ')[0].replace(/^\./, '');
-    try {
-        const commandFile = require(`./commands/${cmdName}`);
-        if (commandFile && commandFile.requiresQuoted) {
-            // This command requires a quoted message
-            try {
-                const quotedId = message.message.extendedTextMessage.contextInfo.stanzaId;
-                const quotedMsg = await sock.loadMessage(message.key.remoteJid, quotedId);
-                
-                if (!quotedMsg) {
-                    await sock.sendMessage(chatId, { 
-                        text: '❌ The quoted message has expired or was deleted. Please quote a newer message.' 
-                    });
-                    return;
-                }
-            } catch (error) {
-                console.error('❌ Error checking quoted message:', error);
-                await sock.sendMessage(chatId, { 
-                    text: '❌ Could not access quoted message. Please try again with a newer message.' 
-                });
-                return;
-            }
-        }
-    } catch (error) {
-        // Command file doesn't exist, skip check
-    }
-}
 
 // Get current prefix
 delete require.cache[require.resolve('./settings')];
@@ -441,6 +412,26 @@ else if (rawMessageText.startsWith('.')) {
     commandWithoutPrefix = rawMessageText.slice(1).trim();
 }
 
+// ✅ QUOTED MESSAGE CHECK — placed AFTER isCommand is defined
+if (isCommand && message.message?.extendedTextMessage?.contextInfo?.quotedMessage) {
+    try {
+        const quotedId = message.message.extendedTextMessage.contextInfo.stanzaId;
+        const quotedMsg = await sock.loadMessage(message.key.remoteJid, quotedId);
+        if (!quotedMsg) {
+            await sock.sendMessage(chatId, { 
+                text: '❌ The quoted message has expired or was deleted. Please quote a newer message.' 
+            });
+            return;
+        }
+    } catch (error) {
+        console.error('❌ Error checking quoted message:', error);
+        await sock.sendMessage(chatId, { 
+            text: '❌ Could not access quoted message. Please try again with a newer message.' 
+        });
+        return;
+    }
+}
+
 // IMPORTANT: Handle non-command messages FIRST
 if (!isCommand) {
     // Handle non-command messages - SHOW BOTH TYPING AND RECORDING INDICATORS
@@ -448,10 +439,10 @@ if (!isCommand) {
         // Check for links BEFORE anything else
         if (isGroup) await Antilink(message, sock);
         
-        // ✅ RECORDING FIRST (swap this)
+        // Show recording FIRST
         await handleAutorecordForMessage(sock, chatId, rawMessageText, message);
         
-        // ✅ TYPING SECOND (swap this)
+        // Show typing SECOND
         await handleAutotypingForMessage(sock, chatId, rawMessageText, message);
         
         // Other non-command handlers
@@ -463,9 +454,10 @@ if (!isCommand) {
 }
 
 // If we get here, it's a command
-// Add dot back for your switch statement
 const userMessage = '.' + commandWithoutPrefix.toLowerCase().replace(/\.\s+/g, '.').trim();
 const rawText = commandWithoutPrefix;
+
+// ... then your switch statement ...
 
 // Only log command usage
 console.log(`📝 Command used in ${isGroup ? 'group' : 'private'}: ${commandWithoutPrefix} (prefix: ${currentPrefix || 'none'})`);
