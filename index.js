@@ -238,25 +238,25 @@ function sessionExists() {
 
 // ══════════════════════════════════════════════════════════════
 // SESSION ID SYSTEM
-// Format  : Gaanju:~<base64-encoded creds.json>
-// .env key: SESSION_ID=Gaanju:~<base64>
+// Format  : GAAJU-MD:<base64-encoded creds.json>
+// .env key: SESSION_ID=GAAJU-MD:<base64>
 // ══════════════════════════════════════════════════════════════
 
 /**
  * encodeSessionId(credsJson)
- * Converts creds.json string → Gaanju:~<base64>
+ * Converts creds.json string → GAAJU-MD:<base64>
  * Called after successful pairing so the user can copy their session ID.
  */
 function encodeSessionId(credsJson) {
-    return "Gaanju:~" + Buffer.from(credsJson, 'utf8').toString('base64');
+    return "GAAJU-MD:" + Buffer.from(credsJson, 'utf8').toString('base64');
 }
 
 // --- Check and use SESSION_ID from .env/environment variables ---
 async function checkEnvSession() {
     const envSessionID = process.env.SESSION_ID;
     if (envSessionID) {
-        if (!envSessionID.includes("Gaanju:~")) {
-            log("🚨 WARNING: Environment SESSION_ID is missing the required prefix 'Gaanju:~'. Assuming BASE64 format.", 'red');
+        if (!envSessionID.includes("GAAJU-MD:")) {
+            log("🚨 WARNING: Environment SESSION_ID is missing the required prefix 'GAAJU-MD:'. Assuming BASE64 format.", 'red');
         }
         global.SESSION_ID = envSessionID.trim();
         return true;
@@ -265,15 +265,15 @@ async function checkEnvSession() {
 }
 
 /**
- * Checks if SESSION_ID starts with "Gaanju:~". If not, cleans .env and restarts.
+ * Checks if SESSION_ID starts with "GAAJU-MD:". If not, cleans .env and restarts.
  */
 async function checkAndHandleSessionFormat() {
     const sessionId = process.env.SESSION_ID;
 
     if (sessionId && sessionId.trim() !== '') {
-        if (!sessionId.trim().startsWith('Gaanju:~')) {
+        if (!sessionId.trim().startsWith('GAAJU-MD:')) {
             log(chalk.white.bgRed('[ERROR]: Invalid SESSION_ID in .env'), 'white');
-            log(chalk.white.bgRed('[SESSION ID] MUST start with "Gaanju:~".'), 'white');
+            log(chalk.white.bgRed('[SESSION ID] MUST start with "GAAJU-MD:".'), 'white');
             log(chalk.white.bgRed('Cleaning .env and creating new one...'), 'white');
 
             try {
@@ -314,7 +314,7 @@ async function getLoginMethod() {
 
     log("Choose login method:", 'yellow');
     log("1) Enter WhatsApp Number (Pairing Code)", 'blue');
-    log("2) Paste Session ID (Gaanju:~...)", 'blue');
+    log("2) Paste Session ID (GAAJU-MD:...)", 'blue');
 
     let choice = await question("Enter option number (1 or 2): ");
     choice = choice.trim();
@@ -328,10 +328,10 @@ async function getLoginMethod() {
         await saveLoginMethod('number');
         return 'number';
     } else if (choice === '2') {
-        let sessionId = await question(chalk.bgBlack(chalk.greenBright(`Paste your Session ID here (Gaanju:~...): `)));
+        let sessionId = await question(chalk.bgBlack(chalk.greenBright(`Paste your Session ID here (GAAJU-MD:...): `)));
         sessionId = sessionId.trim();
-        if (!sessionId.startsWith("Gaanju:~")) {
-            log("Invalid Session ID format! Must start with 'Gaanju:~'.", 'red');
+        if (!sessionId.startsWith("GAAJU-MD:")) {
+            log("Invalid Session ID format! Must start with 'GAAJU-MD:'.", 'red');
             process.exit(1);
         }
         global.SESSION_ID = sessionId;
@@ -739,7 +739,7 @@ async function tylor() {
     // 4. *** PRIORITY: Check .env SESSION_ID FIRST ***
     const envSessionID = process.env.SESSION_ID?.trim();
 
-    if (envSessionID && envSessionID.startsWith('Gaanju:~')) {
+    if (envSessionID && envSessionID.startsWith('GAAJU-MD:')) {
         log("Found SESSION_ID in environment variable.", 'magenta');
 
         // Force use of new session by clearing any old persistent files
