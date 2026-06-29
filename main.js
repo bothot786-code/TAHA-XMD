@@ -26,11 +26,11 @@
 //re-upload? recode? copy code? give credit to gaajutech 2026:)
 //Instagram: gaajutech
 //Telegram: t.me/Official_ChrisGaaju
-//GitHub: Xchristech2 
+//GitHub: Xchristech2
 //WhatsApp: +2348069675806
 //want more free bot scripts? subscribe to my youtube channel: https://youtube.com/@Xchristech
 //   * Created By Github: gaajutech.
-//   * Credit To Chris Gaaju
+//   * Credit To Chris Gaaju 
 //   * © 2026 GAAJU-XMD.
 // ⛥┌┤
 // */
@@ -253,7 +253,7 @@ const { menuFontCommand } = require('./commands/menufont');
 global.packname = settings.packname;
 global.author = settings.author;
 global.channelLink = "https://whatsapp.com/channel/0029VbBvGgyFsn0alyIDjw0z";
-global.ytch = settings.ytChannel || "Gᴀᴀᴊᴜ-Xᴍᴅ";
+global.ytch = settings.ytChannel || "Xchristech";
 
 // ADD PLATFORM DETECTION HERE
 function getDeploymentPlatform() {
@@ -412,25 +412,7 @@ else if (rawMessageText.startsWith('.')) {
     commandWithoutPrefix = rawMessageText.slice(1).trim();
 }
 
-// ✅ QUOTED MESSAGE CHECK — placed AFTER isCommand is defined
-if (isCommand && message.message?.extendedTextMessage?.contextInfo?.quotedMessage) {
-    try {
-        const quotedId = message.message.extendedTextMessage.contextInfo.stanzaId;
-        const quotedMsg = await sock.loadMessage(message.key.remoteJid, quotedId);
-        if (!quotedMsg) {
-            await sock.sendMessage(chatId, { 
-                text: '❌ The quoted message has expired or was deleted. Please quote a newer message.' 
-            });
-            return;
-        }
-    } catch (error) {
-        console.error('❌ Error checking quoted message:', error);
-        await sock.sendMessage(chatId, { 
-            text: '❌ Could not access quoted message. Please try again with a newer message.' 
-        });
-        return;
-    }
-}
+
 
 // IMPORTANT: Handle non-command messages FIRST
 if (!isCommand) {
@@ -1467,17 +1449,10 @@ case userMessage.startsWith('.autorecord'):
                 await clearSessionCommand(sock, chatId, message);
                 break;
           
-            // ✅ New case for .autostatuslike
-case userMessage.startsWith('.autostatuslike'):
-    const likeArgs = ['autostatuslike', ...userMessage.split(' ').slice(1)];
-    await autoStatusCommand(sock, chatId, message, likeArgs);
-    break;
-
-// ✅ Existing .autostatus case (keep as is)
-case userMessage.startsWith('.autostatus'):
-    const autoStatusArgs = userMessage.split(' ').slice(1);
-    await autoStatusCommand(sock, chatId, message, autoStatusArgs);
-    break;
+            case userMessage.startsWith('.autostatus'):
+                const autoStatusArgs = userMessage.split(' ').slice(1);
+                await autoStatusCommand(sock, chatId, message, autoStatusArgs);
+                break;
             case userMessage.startsWith('.simp'):
                 await simpCommand(sock, chatId, message);
                 break;
