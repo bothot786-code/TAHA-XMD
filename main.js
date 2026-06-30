@@ -19,14 +19,14 @@
 //* 
 //  * project_name : GAAJU-XMD
 //  * author : gaajutech
-//  * youtube : https://www.youtube.com/Xchristech 
+//  * youtube : https://www.youtube.com/Xchristech
 //  * description : GAAJU-XMD ,A Multi-Device whatsapp user bot.
 //*
 //*
 //re-upload? recode? copy code? give credit to gaajutech 2026:)
 //Instagram: gaajutech
 //Telegram: t.me/Official_ChrisGaaju
-//GitHub: Xchristech2
+//GitHub: Xchristech2 
 //WhatsApp: +2348069675806
 //want more free bot scripts? subscribe to my youtube channel: https://youtube.com/@Xchristech
 //   * Created By Github: gaajutech.
@@ -231,7 +231,7 @@ const { addCommandReaction, handleAreactCommand, handleAutoreact } = require('./
 const goodnightCommand = require('./commands/goodnight');
 const poetCommand = require('./commands/poet');
 const rosedayCommand = require('./commands/roseday');
-const imagineCommand = require('./commands/imagine');
+const generateCommand = require('./commands/generate');
 const videoCommand = require('./commands/video');
 const sudoCommand = require('./commands/sudo');
 const { miscCommand, handleHeart } = require('./commands/misc');
@@ -1600,7 +1600,7 @@ case userMessage.startsWith('.autorecord'):
             case userMessage === '.roseday':
                 await rosedayCommand(sock, chatId, message);
                 break;
-            case userMessage.startsWith('.imagine') || userMessage.startsWith('.flux') || userMessage.startsWith('.dalle'): await imagineCommand(sock, chatId, message);
+            case userMessage.startsWith('.generate'): await generateCommand(sock, chatId, message);
                 break;
             case userMessage === '.jid': await groupJidCommand(sock, chatId, message);
                 break;
