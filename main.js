@@ -20,7 +20,7 @@
 //  * project_name : GAAJU-XMD
 //  * author : gaajutech
 //  * youtube : https://www.youtube.com/Xchristech
-//  * description : GAAJU-XMD ,A Multi-Device whatsapp user bot.
+//  * description : GAAJU-MD ,A Multi-Device whatsapp user bot.
 //*
 //*
 //re-upload? recode? copy code? give credit to gaajutech 2026:)
@@ -29,9 +29,9 @@
 //GitHub: Xchristech2 
 //WhatsApp: +2348069675806
 //want more free bot scripts? subscribe to my youtube channel: https://youtube.com/@Xchristech
-//   * Created By Github: gaajutech.
+//   * Created By Github: Xchristech2.
 //   * Credit To Chris Gaaju 
-//   * © 2026 GAAJU-XMD.
+//   * © 2025 GAAJU-MXD.
 // ⛥┌┤
 // */
 // 🧹 Fix for ENOSPC / temp overflow in hosted panels
@@ -223,7 +223,7 @@ const spotifyCommand = require('./commands/spotify');
 const playCommand = require('./commands/play');
 const tiktokCommand = require('./commands/tiktok');
 const songCommand = require('./commands/song');
-const aiCommand = require('./commands/ai');
+const geminiCommand = require('./commands/gemini');
 const urlCommand = require('./commands/url');
 const { handleTranslateCommand } = require('./commands/translate');
 const { handleSsCommand } = require('./commands/ss');
@@ -1574,8 +1574,8 @@ case userMessage.startsWith('.autorecord'):
             case userMessage.startsWith('.tiktok') || userMessage.startsWith('.tt'):
                 await tiktokCommand(sock, chatId, message);
                 break;
-            case userMessage.startsWith('.gpt') || userMessage.startsWith('.gemini'):
-                await aiCommand(sock, chatId, message);
+            case userMessage.startsWith('.gemini'):
+                await geminiCommand(sock, chatId, message);
                 break;
             case userMessage.startsWith('.translate') || userMessage.startsWith('.trt'):
                 const commandLength = userMessage.startsWith('.translate') ? 10 : 4;
