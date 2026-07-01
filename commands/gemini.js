@@ -1,0 +1,225 @@
+//════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════//
+//                                                                                                                                                                                        //
+//                                                             GAAJU-X𝐌𝐃 𝐁𝐎𝐓                                                                                                     //
+//                                                                                                                                                                                        //
+//                                                                  𝐕 : 1.0.0                                                                                                             //
+//                                                                                                                                                                                        //
+//                                                                                                                                                                                        //
+//                ██╗    ██╗ █████╗ ██╗     ██╗  ██╗   ██╗   ██╗ █████╗ ██╗   ██╗████████╗███████╗ ██████╗██╗  ██╗      ███╗   ███╗██████╗                                 //
+//                ██║    ██║██╔══██╗██║     ██║  ╚██╗ ██╔╝   ██║██╔══██╗╚██╗ ██╔╝╚══██╔══╝██╔════╝██╔════╝██║  ██║      ████╗ ████║██╔══██╗                              //
+//                ██║ █╗ ██║███████║██║     ██║   ╚████╔╝    ██║███████║ ╚████╔╝    ██║   █████╗  ██║     ███████║█████╗██╔████╔██║██║  ██║                               //
+//                ██║███╗██║██╔══██║██║     ██║    ╚██╔╝██   ██║██╔══██║  ╚██╔╝     ██║   ██╔══╝  ██║     ██╔══██║╚════╝██║╚██╔╝██║██║  ██║                               //
+//                ╚███╔███╔╝██║  ██║███████╗███████╗██║ ╚█████╔╝██║  ██║   ██║      ██║   ███████╗╚██████╗██║  ██║      ██║ ╚═╝ ██║██████╔╝                              //
+//                 ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚════╝ ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝      ╚═╝     ╚═╝╚═════╝                                 //
+//                                                                                                                                                                                        //
+//                                                                 𝐂𝐎𝐏𝐘𝐑𝐈𝐆𝐇𝐓 2025                                                                                                        //
+//                                                                                                                                                                                        //
+//                                                                                                                                                                                        //
+//════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════//
+//* 
+//  * project_name : GAAJU-MD
+//  * author : gaajutech
+//  * youtube : https://www.youtube.com/Zchristech 
+//  * description : GAAJU-XMD ,A Multi-Device whatsapp user bot.
+//*
+//*
+//re-upload? recode? copy code? give credit to gaajutech 2026:)
+//Instagram: gaajutech
+//Telegram: t.me/Official_ChrisGaaju
+//GitHub: Xchristech2
+//WhatsApp: +2348069675806
+//want more free bot scripts? subscribe to my youtube channel: https://youtube.com/@Xchristech
+//   * Created By Github: Xchristech2.
+//   * Credit To Chris Gaaju 
+//   * © 2025 GAAJU-XMD.
+// ⛥┌┤
+// */
+
+/**
+ * GAAJU-XMD - Gemini AI Command (.gemini)
+ * Powered by Google Gemini via GAAJU Proxy
+ * Features: Reply support | WhatsApp formatting fix | Loading animation
+ * Professional Version
+ */
+
+const fetch = require('node-fetch');
+
+const PROXY_URL = 'https://gemini-proxy-10a1.onrender.com/v1/gemini';
+
+const LOADING_FRAMES = [
+    'Thinking [■□□□□□□□□□]',
+    'Thinking [■■□□□□□□□□]',
+    'Thinking [■■■□□□□□□□]',
+    'Thinking [■■■■□□□□□□]',
+    'Thinking [■■■■■□□□□□]',
+    'Thinking [■■■■■■□□□□]',
+    'Thinking [■■■■■■■□□□]',
+    'Thinking [■■■■■■■■□□]',
+    'Thinking [■■■■■■■■■□]'
+];
+
+function wrapText(text, maxLen = 30) {
+    const words = text.split(' ');
+    const lines = [];
+    let current = '';
+    for (const word of words) {
+        if ((current + word).length > maxLen && current.length > 0) {
+            lines.push(current.trim());
+            current = word;
+        } else {
+            current += (current ? ' ' : '') + word;
+        }
+    }
+    if (current) lines.push(current.trim());
+    return lines;
+}
+
+function fixFormattingPerLine(text) {
+    const lines = text.split('\n');
+    return lines.map(line => {
+        // Fix italic: ensure _ pairs on same line
+        const italicMatches = line.match(/(?<!\w)_(?!\w)/g);
+        if (italicMatches && italicMatches.length % 2 !== 0) {
+            line += '_';
+        }
+
+        // Fix strikethrough: ensure ~ pairs on same line
+        const strikeMatches = line.match(/~/g);
+        if (strikeMatches && strikeMatches.length % 2 !== 0) {
+            line += '~';
+        }
+
+        // Fix code: ensure ``` pairs on same line
+        const codeMatches = line.match(/```/g);
+        if (codeMatches && codeMatches.length % 2 !== 0) {
+            line += '```';
+        }
+
+        return line;
+    }).join('\n');
+}
+
+async function geminiCommand(sock, chatId, message) {
+    let loadingMsg;
+
+    try {
+        const text = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
+        const args = text.split(' ').slice(1);
+        let query = args.join(' ').trim();
+
+        // Check if replying to a quoted message
+        const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+        let quotedText = '';
+
+        if (quotedMessage) {
+            quotedText = quotedMessage.conversation || 
+                        quotedMessage.extendedTextMessage?.text || 
+                        quotedMessage.imageMessage?.caption || 
+                        quotedMessage.videoMessage?.caption || '';
+        }
+
+        // Build final prompt
+        if (quotedText && query) {
+            query = `Regarding this: "${quotedText}"\n\n${query}`;
+        } else if (quotedText) {
+            query = quotedText;
+        }
+
+        if (!query) {
+            return sock.sendMessage(chatId, {
+                text: `╭──◆「 *GEMINI AI* 」◆\n` +
+                      `├\n` +
+                      `├◇ 🤖 Powered by Google Gemini\n` +
+                      `├◇ 🆓 Free — No key needed\n` +
+                      `├\n` +
+                      `├◇ *📖 Usage:*\n` +
+                      `├  └ .gemini <question>\n` +
+                      `├  └ Reply to a message with .gemini\n` +
+                      `├  └ Reply with .gemini <question>\n` +
+                      `├\n` +
+                      `├◇ *✨ Examples:*\n` +
+                      `├  └ .gemini write a poem\n` +
+                      `├  └ .gemini explain gravity\n` +
+                      `├\n` +
+                      `╰─┬─★─☆─♪♪─◆\n\n` +
+                      `╭──◆「 *GAAJU-XMD* 」◆\n` +
+                      `╰───★─☆─♪♪─◆`
+            }, { quoted: message });
+        }
+
+        await sock.sendMessage(chatId, { react: { text: '🤖', key: message.key } });
+
+        loadingMsg = await sock.sendMessage(chatId, { text: LOADING_FRAMES[0] });
+        let frame = 0;
+
+        const interval = setInterval(async () => {
+            try {
+                if (frame < LOADING_FRAMES.length - 1) {
+                    frame++;
+                    await sock.sendMessage(chatId, { edit: loadingMsg.key, text: LOADING_FRAMES[frame] });
+                }
+            } catch (e) {}
+        }, 600);
+
+        const response = await fetch(PROXY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: query })
+        });
+        const data = await response.json();
+        let answer = data.reply;
+
+        clearInterval(interval);
+        await sock.sendMessage(chatId, { edit: loadingMsg.key, text: 'Done [■■■■■■■■■■]' });
+
+        if (!answer) throw new Error('NO_RESPONSE');
+
+        // Fix formatting per line (close unclosed _ ~ ```)
+        answer = fixFormattingPerLine(answer);
+
+        const rawLines = answer.split('\n');
+        let output = '';
+        for (const line of rawLines) {
+            if (line.trim().length === 0) {
+                output += '├\n';
+            } else {
+                const wrapped = wrapText(line.trim(), 30);
+                for (const w of wrapped) {
+                    output += `├◇ ${w}\n`;
+                }
+            }
+        }
+
+        await sock.sendMessage(chatId, {
+            text: `╭──◆「 *GEMINI AI* 」◆\n` +
+                  `├\n` +
+                  output +
+                  `├\n` +
+                  `╰─┬─★─☆─♪♪─◆\n\n` +
+                  `╭──◆「 *GAAJU-XMD* 」◆\n` +
+                  `╰───★─☆─♪♪─◆`
+        }, { quoted: message });
+
+    } catch (error) {
+        console.error('Gemini error');
+
+        if (loadingMsg) {
+            try {
+                await sock.sendMessage(chatId, { edit: loadingMsg.key, text: 'Failed [■■■■■■□□□□]' });
+            } catch (e) {}
+        }
+
+        await sock.sendMessage(chatId, {
+            text: `╭──◆「 *GEMINI AI* 」◆\n` +
+                  `├\n` +
+                  `├◇ ❌ Failed to get response\n` +
+                  `├◇ 💡 Try again later\n` +
+                  `├\n` +
+                  `╰─┬─★─☆─♪♪─◆\n\n` +
+                  `╭──◆「 *GAAJU-XMD* 」◆\n` +
+                  `╰───★─☆─♪♪─◆`
+        }, { quoted: message });
+    }
+}
+
+module.exports = geminiCommand;
