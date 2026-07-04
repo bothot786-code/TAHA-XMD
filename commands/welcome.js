@@ -13,8 +13,8 @@ const channelInfo = {
         forwardingScore: 1,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363406588763460@newsletter',
-            newsletterName: 'GAAJU-XMD',
+            newsletterJid: '120363409838427367@newsletter',
+            newsletterName: 'Taha-XMD',
             serverMessageId: -1
         }
     }
@@ -22,7 +22,7 @@ const channelInfo = {
 
 function getFormattedTime() {
     const now = new Date();
-    const timezone = settings.timezone || 'Africa/Lagos';
+    const timezone = settings.timezone || 'Asia/Karachi';
     try {
         return now.toLocaleString('en-US', {
             month: '2-digit', day: '2-digit', year: 'numeric',
@@ -64,7 +64,7 @@ async function handleJoinEvent(sock, id, participants) {
         const groupDesc = groupMetadata.desc || '';
         const memberCount = groupMetadata.participants.length;
         const timeString = getFormattedTime();
-        const botName = settings.botName || 'GAAJU-XMD';
+        const botName = settings.botName || 'TAHA-XMD';
 
         let groupPic = null;
         try { groupPic = await sock.profilePictureUrl(id, 'image'); } catch (e) {}
