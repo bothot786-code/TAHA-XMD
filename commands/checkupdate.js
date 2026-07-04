@@ -9,18 +9,18 @@ const { promisify } = require('util');
 const execAsync = promisify(exec);
 
 // Configuration
-const GITHUB_REPO = 'Xchristech2/GAAJU-XMD';
+const GITHUB_REPO = 'taha khan';
 const GITHUB_API = `https://api.github.com/repos/${GITHUB_REPO}`;
 const GITHUB_COMMITS_URL = `${GITHUB_API}/commits`;
 const GITHUB_MAIN_BRANCH = 'main'; // or 'master'
 
 // Try to get current version from settings
 let CURRENT_VERSION = '1.0.0';
-let TIMEZONE = 'Africa/Lagos';
+let TIMEZONE = 'Asia/Karachi';
 try {
     const settings = require('../settings');
     CURRENT_VERSION = settings.version || '1.0.0';
-    TIMEZONE = settings.timezone || 'Africa/Lagos';
+    TIMEZONE = settings.timezone || 'Asia/Karachi';
 } catch (error) {
     console.error('Could not load settings:', error.message);
 }
@@ -30,8 +30,8 @@ const CHANNEL_INFO = {
         forwardingScore: 1,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363406588763460@newsletter',
-            newsletterName: 'ᴄʜʀɪs ɢᴀᴀᴊᴜ',
+            newsletterJid: '120363409838427367@newsletter',
+            newsletterName: 'Taha khan',
             serverMessageId: -1
         }
     }
