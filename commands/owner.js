@@ -4,11 +4,11 @@ async function ownerCommand(sock, chatId, message) {
     try {
         // HARDCODED - CANNOT BE CHANGED BY DEPLOYERS
         const ORIGINAL_CREATOR = {
-            name: "Chris Gaaju",
-            number: "2348069675806", 
+            name: "Taha khan",
+            number: "92347471404", 
             social: {
-                youtube: "youtube.com/@Xchristech",
-                github: "github.com/Xchristech2"
+                youtube: "youtube.com/@tachandia",
+                github: "github.com/X"
             }
         };
 
@@ -18,7 +18,7 @@ FN:${ORIGINAL_CREATOR.name}
 ORG:Chris Gaaju;
 TITLE:Original Bot Developer
 TEL;waid=${ORIGINAL_CREATOR.number}:+${ORIGINAL_CREATOR.number}
-NOTE:© 2026 Chris Gaaju. Original creator.
+NOTE:© 2026 Taha khan. Original creator.
 END:VCARD`;
 
         await sock.sendMessage(chatId, {
@@ -50,8 +50,8 @@ END:VCARD`;
                 forwardingScore: 1,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363406588763460@newsletter',
-                    newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                    newsletterJid: '120363409838427367@newsletter',
+                    newsletterName: 'Taha md-Xᴍᴅ',
                     serverMessageId: -1
                 }
             }
@@ -62,8 +62,8 @@ END:VCARD`;
         await sock.sendMessage(chatId, {
             text: `👑 *ORIGINAL BOT DEVELOPER* 👑
 
-*Chris Gaaju - GAAJU-XMD*
-*Official WhatsApp:* +2348069675806
+*Chris Gaaju - TAHA-XMD*
+*Official WhatsApp:* +923474771404
 
 *This bot was originally created by Chris Gaaju*
 *Contact the original developer for real support*
