@@ -1,5 +1,5 @@
 {
-  "name": "GAAJU-XMD",
+  "name": "TAHA-XMD",
   "image": "node:latest",
   "postCreateCommand": "npm install"
 }
