@@ -52,8 +52,8 @@ const channelInfo = {
         forwardingScore: 1,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363406588763460@newsletter',
-            newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+            newsletterJid: '120363409838427367@newsletter',
+            newsletterName: 'Taha-Xᴍᴅ',
             serverMessageId: -1
         }
     }
@@ -397,7 +397,7 @@ async function autoStatusCommand(sock, chatId, message, args) {
                       `└ .autostatus on\n` +
                       `└ .autostatuslike on\n` +
                       `└ .autostatus self on\n` +
-                      `└ .autostatus include add 2347012345678`,
+                      `└ .autostatus include add 923474771404`,
                 ...channelInfo
             }, { quoted: message });
             return;
