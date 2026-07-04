@@ -13,8 +13,8 @@ const channelInfo = {
         forwardingScore: 1,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363406588763460@newsletter',
-            newsletterName: 'GAAJU-XMD',
+            newsletterJid: '120363409838427367@newsletter',
+            newsletterName: 'Taha-XMD',
             serverMessageId: -1
         }
     }
