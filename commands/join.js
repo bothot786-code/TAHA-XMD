@@ -9,8 +9,8 @@ const channelInfo = {
         forwardingScore: 1,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363406588763460@newsletter',
-            newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+            newsletterJid: '120363409838427367@newsletter',
+            newsletterName: 'Taha-Xᴍᴅ',
             serverMessageId: -1
         }
     }
@@ -47,7 +47,7 @@ async function joinCommand(sock, chatId, message) {
 
         if (args.length === 0) {
             await sock.sendMessage(chatId, {
-                text: `👥 *JOIN COMMAND*\n\n━━━━━━━━━━━━━━━━━━━━\n📖 *Usage:*\n└ .join <group-link>\n\n━━━━━━━━━━━━━━━━━━━━\n✨ *Examples:*\n└ .join https://chat.whatsapp.com/HgGLuDF6ZNABneNTbdrtUQ\n└ .join https://chat.whatsapp.com/ABC123def456\n\n━━━━━━━━━━━━━━━━━━━━\n📌 *Note:*\n└ Only works for WhatsApp GROUP links\n└ Does NOT work for Channels\n\n━━━━━━━━━━━━━━━━━━━━\n💡 *Group link format:*\n└ https://chat.whatsapp.com/XXXXXX`,
+                text: `👥 *JOIN COMMAND*\n\n━━━━━━━━━━━━━━━━━━━━\n📖 *Usage:*\n└ .join <group-link>\n\n━━━━━━━━━━━━━━━━━━━━\n✨ *Examples:*\n└ .join https://whatsapp.com/channel/0029Vb7e7Xd0wajm0hUt2b1R\n└ .join https://whatsapp.com/channel/0029Vb7e7Xd0wajm0hUt2b1R\n\n━━━━━━━━━━━━━━━━━━━━\n📌 *Note:*\n└ Only works for WhatsApp GROUP links\n└ Does NOT work for Channels\n\n━━━━━━━━━━━━━━━━━━━━\n💡 *Group link format:*\n└ https://chat.whatsapp.com/XXXXXX`,
                 ...channelInfo
             });
             return;
