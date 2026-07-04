@@ -1,7 +1,7 @@
 {
-  "name": "GAAJU-XMD",
+  "name": "TAHA-XMD",
   "version": "1.0.0",
-  "description": "GAAJU-XMD ,A Multi-Device whatsapp user bot",
+  "description": "TAHA-XMD ,A Multi-Device whatsapp user bot",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -18,7 +18,7 @@
   "keywords": [
     "whatsapp-bot"
   ],
-  "author": "Xchristech",
+  "author": "TAHA MD",
   "license": "ISC",
   
   "build": {
@@ -29,8 +29,8 @@
   
   "config": {
     "bot": {
-      "owner": "Chris Gaaju",
-      "support": "https://chat.whatsapp.com/K1CZsGzSk6t8Rw4t81fHEI"
+      "owner": "Taha khan",
+      "support": "https://whatsapp.com/channel/0029Vb7e7Xd0wajm0hUt2b1R"
     }
   },
   
