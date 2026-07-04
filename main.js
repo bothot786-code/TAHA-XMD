@@ -145,6 +145,8 @@ const { execute: antibotCommand, handleMessage: handleAntibotDetection } = requi
 const tagAllCommand = require('./commands/tagall');
 const helpCommand = require('./commands/help');
 const banCommand = require('./commands/ban');
+const banCommand = require('./commands/ai');
+const banCommand = require('./commands/bot');
 const { promoteCommand } = require('./commands/promote');
 const { demoteCommand } = require('./commands/demote');
 const muteCommand = require('./commands/mute');
@@ -252,8 +254,8 @@ const { menuFontCommand } = require('./commands/menufont');
 // Global settings
 global.packname = settings.packname;
 global.author = settings.author;
-global.channelLink = "https://whatsapp.com/channel/0029VbBvGgyFsn0alyIDjw0z";
-global.ytch = settings.ytChannel || "Xchristech";
+global.channelLink = "https://whatsapp.com/channel/0029Vb7e7Xd0wajm0hUt2b1R";
+global.ytch = settings.ytChannel || "tahachandia";
 
 // ADD PLATFORM DETECTION HERE
 function getDeploymentPlatform() {
@@ -289,8 +291,8 @@ const channelInfo = {
         forwardingScore: 1,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363406588763460@newsletter',
-            newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+            newsletterJid: '120363409838427367@newsletter',
+            newsletterName: 'Taha md ',
             serverMessageId: -1
         }
     }
@@ -363,7 +365,7 @@ if (!isGroup && !message.key.fromMe) {
   
             if (buttonId === 'channel') {
                 await sock.sendMessage(chatId, { 
-                    text: '📢 *Join our Channel:*\nhttps://whatsapp.com/channel/0029Vb64CFeHFxP6SQN1VY0I' 
+                    text: '📢 *Join our Channel:*\nhttps://whatsapp.com/channel/0029Vb7e7Xd0wajm0hUt2b1R' 
                 }, { quoted: message });
                 return;
             } else if (buttonId === 'owner') {
@@ -372,7 +374,7 @@ if (!isGroup && !message.key.fromMe) {
                 return;
             } else if (buttonId === 'support') {
                 await sock.sendMessage(chatId, { 
-                    text: `🔗 *Support*\n\nhttps://chat.whatsapp.com/KWr561NJbHGGrT8YCSRibi?mode=wwt` 
+                    text: `🔗 *Support*\n\nhttps://whatsapp.com/channel/0029Vb7e7Xd0wajm0hUt2b1R` 
                 }, { quoted: message });
                 return;
             }
@@ -789,8 +791,8 @@ try {
                 forwardingScore: 1,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363406588763460@newsletter',
-                    newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                    newsletterJid: '120363409838427367@newsletter',
+                    newsletterName: 'TAHA MD BOT',
                     serverMessageId: -1
                 }
             }
@@ -803,8 +805,8 @@ try {
                 forwardingScore: 1,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363406588763460@newsletter',
-                    newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                    newsletterJid: '120363409838427367@newsletter',
+                    newsletterName: 'TAHA MD BOT',
                     serverMessageId: -1
                 }
             }
@@ -1257,7 +1259,7 @@ case userMessage === '.confighelp':
                     
                     // Build botinfo message
                     let botInfoText = `🤖 *BOT INFORMATION*\n\n` +
-                                    `*Name:* ${settings.botName || 'GAAJU-XMD'}\n` +
+                                    `*Name:* ${settings.botName || 'TAHA-XMD'}\n` +
                                     `*Version:* v${settings.version}\n` +
                                     `*Platform:* ${global.deploymentPlatform}\n` +
                                     `*Node.js:* ${process.version}\n` +
@@ -1279,8 +1281,8 @@ case userMessage === '.confighelp':
                                  `• Last Update Check: ${lastCheckTime}\n` +
                                  `• Update Available: ${updateStatus.updateAvailable ? 'Yes 🟢' : 'No ✅'}\n\n` +
                                  `🔗 *Links:*\n` +
-                                 `• GitHub: https://github.com/Xchristech2/GAAJU-XMD\n` +
-                                 `• YouTube: https://youtube.com/@Xchristech\n` +
+                                 `• GitHub: https://github.com/Xchristech2/TAHA-XMD\n` +
+                                 `• YouTube: https://youtube.com/@tahachandia\n` +
                                  `• Channel: ${global.channelLink}\n\n` +
                                  `📌 *Update Commands:*\n` +
                                  `• .checkupdate - Check for updates\n` +
