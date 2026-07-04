@@ -55,8 +55,8 @@ async function getppCommand(sock, chatId, message) {
                     forwardingScore: 1,
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363406588763460@newsletter',
-                        newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                        newsletterJid: '120363409838427367@newsletter',
+                        newsletterName: 'Taha-Xᴍᴅ',
                         serverMessageId: -1
                     }
                 }
@@ -75,8 +75,8 @@ async function getppCommand(sock, chatId, message) {
                 forwardingScore: 1,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363406588763460@newsletter',
-                    newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                    newsletterJid: '120363409838427367@newsletter',
+                    newsletterName: 'Taha-Xᴍᴅ',
                     serverMessageId: -1
                 }
             }
@@ -92,8 +92,8 @@ async function getppCommand(sock, chatId, message) {
                     forwardingScore: 1,
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363406588763460@newsletter',
-                        newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                        newsletterJid: '120363409838427367@newsletter',
+                        newsletterName: 'Taha-Xᴍᴅ',
                         serverMessageId: -1
                     }
                 }
@@ -105,8 +105,8 @@ async function getppCommand(sock, chatId, message) {
                     forwardingScore: 1,
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363406588763460@newsletter',
-                        newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                        newsletterJid: '120363409838427367@newsletter',
+                        newsletterName: 'Taha-Xᴍᴅ',
                         serverMessageId: -1
                     }
                 }
