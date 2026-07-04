@@ -37,8 +37,8 @@ function getSettings() {
         return require('../settings');
     } catch (error) {
         return {
-            ownerNumber: '2348069675806',
-            botOwner: 'ᴄʜʀɪs ɢᴀᴀᴊᴜ'
+            ownerNumber: '923474771404',
+            botOwner: 'TAHA KHAN'
         };
     }
 }
