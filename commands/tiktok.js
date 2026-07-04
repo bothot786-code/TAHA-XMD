@@ -125,12 +125,12 @@ async function tiktokCommand(sock, chatId, message) {
                                 await sock.sendMessage(chatId, {
                                     video: { url: mediaUrl },
                                     mimetype: "video/mp4",
-                                    caption: "*DOWNLOADED BY Gᴀᴀᴊᴜ-Xᴍᴅ*"
+                                    caption: "*DOWNLOADED BY Taha-Xᴍᴅ*"
                                 }, { quoted: message });
                             } else {
                                 await sock.sendMessage(chatId, {
                                     image: { url: mediaUrl },
-                                    caption: "*DOWNLOADED BY Gᴀᴀᴊᴜ-Xᴍᴅ*"
+                                    caption: "*DOWNLOADED BY Taha-Xᴍᴅ*"
                                 }, { quoted: message });
                             }
                         }
@@ -216,7 +216,7 @@ async function tiktokCommand(sock, chatId, message) {
                     console.error(`Failed to download video: ${downloadError.message}`);
                     // Fallback to URL method
                     try {
-                        const caption = title ? `*DOWNLOADED BY WALLYJAYTECH-MD*\n\n📝 Title: ${title}` : "*DOWNLOADED BY Gᴀᴀᴊᴜ-Xᴍᴅ*";
+                        const caption = title ? `*DOWNLOADED BY TAHA KHAN 📝 Title: ${title}` : "*DOWNLOADED BY Taha-Xᴍᴅ*";
                         
                         await sock.sendMessage(chatId, {
                             video: { url: videoUrl },
