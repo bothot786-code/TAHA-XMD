@@ -4,7 +4,7 @@ async function weatherCommand(sock, chatId, message, city) {
 try {
 if (!city) {
 return await sock.sendMessage(chatId, {
-text: `🌤️ *Weather Command*\n\n❌ *Please specify a city!*\n\n*Usage:* .weather <city>\n*Examples:*\n.weather Lagos\n.weather London\n.weather New York\n\n_Powered by Gᴀᴀᴊᴜ-Xᴍᴅ_`
+text: `🌤️ *Weather Command*\n\n❌ *Please specify a city!*\n\n*Usage:* .weather <city>\n*Examples:*\n.weather Lagos\n.weather Karachi\n.weather Lahore\n\n_Powered by Taha-Xᴍᴅ_`
 }, { quoted: message });
 }
 
@@ -28,7 +28,7 @@ const weatherMessage = `🌤️ *WEATHER REPORT*
 ☁️ *Condition:* ${weatherData.description}
 🌅 *Time:* ${new Date().toLocaleTimeString()}
 
-_Powered by Gᴀᴀᴊᴜ-Xᴍᴅ_`;
+_Powered by Taha-Xᴍᴅ_`;
 
 await sock.sendMessage(chatId, {
 text: weatherMessage
