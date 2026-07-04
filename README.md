@@ -2,11 +2,11 @@
 <img src="https://o.uguu.se/CrQCelwU.jpg" width="100%">
 </p>
 
-<h1 align="center">🚀 GAAJU-XMD 🚀</h1>
+<h1 align="center">🚀 TAHA-XMD 🚀</h1>
 
 <p align="center">
 <img src="https://img.shields.io/badge/BEST-MULTI_DEVICE_BOT-cyan?style=for-the-badge">
-<img src="https://img.shields.io/badge/GAAJU--XMD-black?style=for-the-badge&logo=whatsapp&logoColor=cyan">
+<img src="https://img.shields.io/badge/TAHA--XMD-black?style=for-the-badge&logo=whatsapp&logoColor=cyan">
 <img src="https://img.shields.io/badge/Developer-Chris_Gaaju-cyan?style=for-the-badge">
 </p>
 
