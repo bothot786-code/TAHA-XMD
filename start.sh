@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "🚀 Starting GAAJU-XMD Bot..."
+echo "🚀 Starting TAHA-XMD Bot..."
 echo "📦 Installing dependencies..."
 npm install
 
