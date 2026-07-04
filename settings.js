@@ -36,20 +36,20 @@
 // */
 require('dotenv').config();
 const settings = {
-  packname: 'GAAJU-XMD',
-  author: '‎Chris Gaaju',
-  botName: "GAAJU-XMD",
-  botOwner: 'ᴄʜʀɪs ɢᴀᴀᴊᴜ', 
-  timezone: 'Africa/Lagos',
+  packname: 'TAHA-XMD',
+  author: '‎TAHA KHAN',
+  botName: "TAHA-XMD",
+  botOwner: 'TAHA KHAN', 
+  timezone: 'Asia/Karachi',
   prefix: '.',
-  ownerNumber: '2348069675806', //Set your number here without + symbol, just add country code & number without any space
+  ownerNumber: '92347471404', //Set your number here without + symbol, just add country code & number without any space
   giphyApiKey: 'qnl7ssQChTdPjsKta2Ax2LMaGXz303tq',
   commandMode: "public",
   maxStoreMessages: 20, 
   storeWriteInterval: 10000,
-  description: "GAAJU-XMD ,A Multi-Device whatsapp user bot",
+  description: "TAHA-XMD ,A Multi-Device whatsapp user bot",
   version: "1.0.0",
-  updateZipUrl: "https://github.com/Xchristech2/GAAJU-XMD/archive/refs/heads/main.zip",
+  updateZipUrl: "https://github.com/Xchristech2/TAHA-MD/archive/refs/heads/main.zip",
   removeBgApi: {
     enabled: true,
     apiKey: "dyrbNSNtMf1CE84he61DR7Wx", // Your remove.bg API key That's currently mine it expire anytime remember to put yours if expired just go to remove.bg site sign up and get your api key 
