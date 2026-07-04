@@ -1,7 +1,7 @@
  const settings = require("../settings");
 async function aliveCommand(sock, chatId, message) {
     try {
-        const message1 = `*🤖 GAAJU-XMD is Active! 🤖*\n\n` +
+        const message1 = `*🤖 TAHA-XMD is Active! 🤖*\n\n` +
                        `*Version:* ${settings.version}\n` +
                        `*Status:* Online\n\n` +
                        `*🌟 MENUS:*\n` +
@@ -20,7 +20,7 @@ async function aliveCommand(sock, chatId, message) {
                        `• Github Menu\n` +            
                        `• And Many more!\n\n` +
                        `Type *.menu* for full command list\n\n`+
-                       `*Copyright ᴄʜʀɪs ɢᴀᴀᴊᴜ 2026*`;
+                       `*Copyright Taha khan 2026*`;
 
         await sock.sendMessage(chatId, {
             text: message1,
@@ -28,8 +28,8 @@ async function aliveCommand(sock, chatId, message) {
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363406588763460@newsletter',
-                    newsletterName: 'Gᴀᴀᴊᴜ-Xᴍᴅ',
+                    newsletterJid: '120363409838427367@newsletter',
+                    newsletterName: 'TAHA MD',
                     serverMessageId: -1
                 }
             }
