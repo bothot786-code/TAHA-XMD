@@ -111,7 +111,7 @@ function getBotMode() {
 function getTimeBasedGreeting() {
     try {
         const now = new Date();
-        const tz = settings.timezone || 'Africa/Lagos';
+        const tz = settings.timezone || 'Asia/Karachi';
         const hour = parseInt(now.toLocaleString('en-US', { timeZone: tz, hour12: false, hour: '2-digit' }));
         const time = now.toLocaleString('en-US', { timeZone: tz, hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
         if (hour >= 5 && hour < 12) return { greeting: '🌅 Good Morning', emoji: '🌅', time, message: 'Have a wonderful day ahead!' };
@@ -124,7 +124,7 @@ function getTimeBasedGreeting() {
 function getDayWithEmoji() {
     try {
         const now = new Date();
-        const tz = settings.timezone || 'Africa/Lagos';
+        const tz = settings.timezone || 'Asia/Karachi';
         const day = now.toLocaleString('en-US', { timeZone: tz, weekday: 'long' });
         const month = now.toLocaleString('en-US', { timeZone: tz, month: 'long' });
         const year = now.getFullYear();
@@ -196,10 +196,10 @@ function buildMenu(styleId, data) {
     // ✅ All info lines with emojis
     const infoLines = [
         `*👤 User:* ${userName}`,
-        `*🤖 BotName:* ${settings.botName || 'GAAJU-XMD'}`,
+        `*🤖 BotName:* ${settings.botName || 'TAHA-XMD'}`,
         `*🧠 Version:* ${settings.version || '1.0.0'}`,
-        `*👑 BotOwner:* ${settings.botOwner || 'Chris Gaaju'}`,
-        `*📺 YT Channel:* ${global.ytch || 'Xchristech'}`,
+        `*👑 BotOwner:* ${settings.botOwner || 'TAHA KHAN'}`,
+        `*📺 YT Channel:* ${global.ytch || 'tahachandia'}`,
         `*📞 BotNumber:* ${settings.ownerNumber}`,
         `*📥 Prefix:* ${prefix}`,
         `*🎨 Menu Style:* ${styleId}`,
@@ -268,7 +268,7 @@ function buildMenu(styleId, data) {
     if (styleId === 1) {
         let menu = `👋 Hello *${userName.split('@')[0]}*! ${greeting.message}\n\n`;
         menu += `*${greeting.greeting}!* Here's your menu:\n\n`;
-        menu += `╭──◆「 *GAAJU-XMD* 」◆\n`;
+        menu += `╭──◆「 *TAHA-XMD* 」◆\n`;
         menu += `├\n`;
         for (const l of infoLines) menu += `├◇ ${l}\n`;
         menu += `├\n╰─┬─★─☆─♪♪─★\n\n`;
@@ -279,7 +279,7 @@ function buildMenu(styleId, data) {
             menu += `├\n╰─┬─★─☆─♪♪─★\n\n`;
         }
         menu += `              *© 2025 - 2026*\n\n`;
-        menu += `╭──「 *GAAJU-XMD* 」◆\n`;
+        menu += `╭──「 *TAHA-XMD* 」◆\n`;
         menu += `╰───★─☆─♪♪─◆`;
         return menu;
     }
@@ -362,8 +362,8 @@ async function helpCommand(sock, chatId, message) {
         forwardingScore: 999,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363406588763460@newsletter',
-            newsletterName: '‎', // ← invisible zero‑width character
+            newsletterJid: '120363409838427367@newsletter',
+            newsletterName: '‎Taha md', // ← invisible zero‑width character
             serverMessageId: -1
         }
     };
