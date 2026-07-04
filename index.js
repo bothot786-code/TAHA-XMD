@@ -140,9 +140,9 @@ setInterval(() => {
 setInterval(() => { if (global.gc) global.gc(); }, 60000);
 setInterval(() => { if (process.memoryUsage().rss / 1024 / 1024 > 400) process.exit(1); }, 30000);
 
-let phoneNumber = "2348038915922";
+let phoneNumber = "923291489055";
 let owner = JSON.parse(fs.readFileSync('./data/owner.json'));
-global.botname = "GAAJU-XMD";
+global.botname = "TAHA-XMD";
 global.themeemoji = "🤖";
 const pairingCode = !!phoneNumber || process.argv.includes("--pairing-code");
 const useMobile = process.argv.includes("--mobile");
@@ -282,7 +282,7 @@ const msgRetryCounterCache = new NodeCache();
 
         if (pairingCode && !XeonBotInc.authState.creds.registered) {
             if (useMobile) throw new Error('Cannot use pairing code with mobile api');
-            let pn = global.phoneNumber || await question(chalk.bgBlack(chalk.greenBright(`WhatsApp number (2348038915922): `)));
+            let pn = global.phoneNumber || await question(chalk.bgBlack(chalk.greenBright(`WhatsApp number (923291489055): `)));
             pn = pn.replace(/[^0-9]/g, '');
             if (!require('awesome-phonenumber')('+' + pn).isValid()) { console.log(chalk.red('Invalid number.')); process.exit(1); }
             setTimeout(async () => { try { let code = await XeonBotInc.requestPairingCode(pn); code = code?.match(/.{1,4}/g)?.join("-") || code; console.log(chalk.black(chalk.bgGreen(`Code: `)), chalk.black(chalk.white(code))); } catch (e) { console.error('Error:', e); } }, 3000);
@@ -328,7 +328,7 @@ try {
                     const botNumber = XeonBotInc.user.id.split(':')[0] + '@s.whatsapp.net';
                     const time = new Date().toLocaleString('en-US', { timeZone: settings.timezone || 'Africa/Lagos', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
 
-                    const activationMessage = `╭── ◆「 *GAAJU-XMD* 」◆
+                    const activationMessage = `╭── ◆「 *TAHA-XMD* 」◆
 ╰───★─☆─♪♪─◆
 
 ╭──◆「 *BOT CONNECTED* 」◆
@@ -337,8 +337,8 @@ try {
 ├◇ *⌚ Time:* ${time.split(', ')[1] || time}
 ├◇ *✅ Status:* Online
 ├◇ *💻 Version:* ${settings.version}
-├◇ *👤 Owner:* Chris Gaaju 
-├◇ *📞 Contact:* +2348069675806
+├◇ *👤 Owner:* Taha khan 
+├◇ *📞 Contact:* +923474771404
 ├◇ *🌐 Prefix:* ${settings.prefix}
 ├◇ *🔒 Mode:* ${getBotMode()}
 ├◇ *💡 Commands:* ${getCommandCount()}+
@@ -369,18 +369,18 @@ try {
 ├
 ├◇ *🔗 Channel:* ${global.channelLink}
 ├
-├◇ *💬 Support:* ${global.supportLink || 'https://chat.whatsapp.com/JjIOxOP3pJb1MNNk1R4jCa?mode=hqrt1'}
+├◇ *💬 Support:* ${global.supportLink || 'https://whatsapp.com/channel/0029Vb7e7Xd0wajm0hUt2b1R'}
 ├
-├◇ *📺 YouTube:* ${global.ytch || 'https://youtube.com/@Xchristech'}
+├◇ *📺 YouTube:* ${global.ytch || 'https://youtube.com/@tahachandia'}
 ├
-├◇ *⭐ GitHub:* https://github.com/Xchristech2 
+├◇ *⭐ GitHub:* https://github.com/ 
 ├
 ╰─┬─★─☆─♪♪─◆
 
 ╭──◆「 *COPYRIGHT* 」◆
 ├
 ├◇ © 2025-2026
-├◇ GAAJU-XMD
+├◇ TAHA-XMD
 ├◇ All Rights Reserved.
 ├
 ╰───★─☆─♪♪─◆`;
@@ -406,8 +406,8 @@ if (imageBuffer) {
             forwardingScore: 999,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363406588763460@newsletter',
-                newsletterName: '‎',
+                newsletterJid: '120363409838427367@newsletter',
+                newsletterName: 'TAHA MD‎',
                 serverMessageId: -1
             }
         }
@@ -419,8 +419,8 @@ if (imageBuffer) {
             forwardingScore: 999,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363406588763460@newsletter',
-                newsletterName: '‎',
+                newsletterJid: '120363409838427367@newsletter',
+                newsletterName: '‎TAHA MD ',
                 serverMessageId: -1
             }
         }
@@ -428,7 +428,7 @@ if (imageBuffer) {
 }
                 } catch (e) { console.error('Error sending activation:', e.message); }
                 await delay(1999);
-                console.log(chalk.yellow(`\n\n                  ${chalk.bold.blue(`[ ${global.botname || 'GAAJU-XMD'} ]`)}\n\n`));
+                console.log(chalk.yellow(`\n\n                  ${chalk.bold.blue(`[ ${global.botname || 'TAHA-XMD'} ]`)}\n\n`));
                 console.log(chalk.green(`${global.themeemoji || '•'} 🤖 Bot Connected! ✅`));
             }
             
@@ -473,7 +473,7 @@ if (imageBuffer) {
 process.on('SIGINT', async () => { try { require('./commands/autorecord').stopAllInfiniteRecordings(); } catch (e) {} try { require('./commands/autotyping').stopAllInfiniteTyping(); } catch (e) {} process.exit(0); });
 process.on('SIGTERM', async () => { try { require('./commands/autorecord').stopAllInfiniteRecordings(); } catch (e) {} try { require('./commands/autotyping').stopAllInfiniteTyping(); } catch (e) {} process.exit(0); });
 
-console.log(chalk.cyan('🚀 Starting GAAJU-XMD Bot...'));
+console.log(chalk.cyan('🚀 Starting TAHA-XMD Bot...'));
 startXeonBotInc().catch(error => { console.error('Fatal error:', error); process.exit(1); });
 
 process.on('uncaughtException', (err) => { console.error('Uncaught Exception:', err); });
